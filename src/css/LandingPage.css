@@ -1,0 +1,9 @@
+.myNav {
+    background-color: #EAC696;
+    height: 50px;
+}
+
+.myContainer {
+    margin: 0px 10px 0 10px !important;
+    max-width: 2000px !important;
+}
