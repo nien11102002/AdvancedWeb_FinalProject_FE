@@ -7,11 +7,12 @@ import {
 import "./index.css";
 import LandingPage from "./routes/LandingPage";
 import LoginScreen from "./routes/LoginScreen";
+import RegisterScreen from "./routes/RegisterScreen";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LoginScreen/>,
+    element: <RegisterScreen/>,
   }
 ]);
 
