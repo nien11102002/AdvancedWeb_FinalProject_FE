@@ -4,8 +4,15 @@ import { Navbar, Container,NavDropdown,Nav, Image, Button } from 'react-bootstra
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../assets/Logo.svg';
 import LandingPagePicture from '../assets/landingPage_img.jpg';
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage() {
+    const navigate=useNavigate();
+    function btn_routeChange(){
+      let path='/home';
+      navigate(path);
+    }
+
     return (
         <div>
           <Navbar collapseOnSelect className="myNav">
@@ -24,8 +31,8 @@ function LandingPage() {
             </Nav>
 
             <Nav>
-              <Nav.Link href="/">Login</Nav.Link>
-              <Nav.Link eventKey={2} href="/">
+              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link eventKey={2} href="/register">
                 Register
               </Nav.Link>
             </Nav>
@@ -34,7 +41,9 @@ function LandingPage() {
       </Navbar>
           <div className='image-container position-relative'>
             <Image src={LandingPagePicture} className='w-100'></Image>
-            <Button className='myButton' size='lg' variant='color'>Learn More</Button>
+            {/* <a href='/home'> */}
+              <Button className='myButton' size='lg' variant='color' onClick={btn_routeChange}>Learn More</Button>
+            {/* </a> */}
           </div>
         </div>
     );

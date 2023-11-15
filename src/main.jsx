@@ -8,12 +8,25 @@ import "./index.css";
 import LandingPage from "./routes/LandingPage";
 import LoginScreen from "./routes/LoginScreen";
 import RegisterScreen from "./routes/RegisterScreen";
+import HomePage from "./routes/HomePage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path:"/",
+    element: <LandingPage/>,
+  },
+  {
+    path: "/home",
+    element: <HomePage/>,
+  },
+  {
+    path: "/login",
+    element: <LoginScreen/>,
+  },
+  {
+    path: "/register",
     element: <RegisterScreen/>,
-  }
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

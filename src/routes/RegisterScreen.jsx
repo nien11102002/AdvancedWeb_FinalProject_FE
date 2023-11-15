@@ -12,16 +12,18 @@ function RegisterScreen() {
         <div className='d-flex flex-row'>
             <div className='left-div w-50 h-100'>
                 <div className='brand-container d-flex flex-row'>
+                    <a href='/'>
                     <div className='logo-container d-flex align-items-center justify-content-center'>
                         <Image src={logo} className='myLogo'></Image>
                     </div>
-                    <div className='d-flex align-items-center brand-name'>EduCat</div>
+                    </a>
+                    <a href='/home' className='d-flex align-items-center brand-name'>EduCat</a>
                 </div>
                 <div className='register-container'>
                     <h1>Register</h1>
                     <div>
                         <span>Already have an account?  </span>
-                        <a href='/'>Sign in</a>
+                        <a href='/login' style={{color:'#EAC696'}}>Sign in</a>
                     </div>
                     <Form>
                         <Form.Group className='register-form'>

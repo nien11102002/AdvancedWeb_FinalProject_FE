@@ -12,16 +12,18 @@ function LoginScreen() {
         <div className='d-flex flex-row'>
             <div className='left-div w-50 h-100'>
                 <div className='brand-container d-flex flex-row'>
+                    <a href='/'>
                     <div className='logo-container d-flex align-items-center justify-content-center'>
                         <Image src={logo} className='myLogo'></Image>
                     </div>
-                    <div className='d-flex align-items-center brand-name'>EduCat</div>
+                    </a>
+                    <a href='/home' className='d-flex align-items-center brand-name'>EduCat</a>
                 </div>
                 <div className='login-container'>
                     <h1>Login</h1>
                     <div>
                         <span>Don't have an account?  </span>
-                        <a href='/'>Create now</a>
+                        <a href='/register' style={{color:'#EAC696'}}>Create now</a>
                     </div>
                     <Form>
                         <Form.Group className='login-form'>
@@ -34,7 +36,7 @@ function LoginScreen() {
                                 type='checkbox'
                                 id='default-checkbox'
                                 label='Save account'/>
-                            <a href='/'>Forgot Password?</a>
+                            <a href='/' style={{color:'#EAC696'}}>Forgot Password?</a>
                             </div>
                             <Button variant='color' 
                                     className='login-button'
