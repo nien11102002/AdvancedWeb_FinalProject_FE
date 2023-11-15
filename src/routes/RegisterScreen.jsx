@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form,Image } from 'react-bootstrap';
 import logo from '../assets/Logo.png';
 import '../css/RegisterScreen.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterScreen() {
-    const RegisterHandle = () => {
-
+    const navigate = useNavigate();
+    const [email,setEmail]=useState('');
+    const [password,setPassword]=useState('');
+    const RegisterHandle = (event) => {
+        const URL='http://localhost:3000/auth/local/signup'
+        event.preventDefault();
+        const userAccount = {
+            email:email,
+            hash:password,
+        }
+    fetch(URL,{
+      method:'POST',
+      headers: {
+        'Accept': 'application/json; charset=utf-8',
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(userAccount),
+    })
+    .then(res =>res.json())
+    .then(data => {
+        if (data) {
+            localStorage.setItem("authenticated", true);
+            localStorage.setItem("email",email);
+            navigate("/home");
+        }
+        else {
+            setEmail('')
+            setPassword('')
+            console.error('Email has already existed!');
+        }
+    })
     }
     return (
         <div className='d-flex flex-row'>
@@ -28,9 +58,9 @@ function RegisterScreen() {
                     <Form>
                         <Form.Group className='register-form'>
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type='email' placeholder='Email'></Form.Control>
+                            <Form.Control type='email' placeholder='Email' value={email} onChange={event => setEmail(event.target.value)}></Form.Control>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type='password' placeholder='Password'></Form.Control>
+                            <Form.Control type='password' placeholder='Password' value={password} onChange={event => setPassword(event.target.value)}></Form.Control>
                             <Button variant='color' 
                                     className='register-button'
                                     onClick={RegisterHandle}>Register</Button>

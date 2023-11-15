@@ -1,11 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form,Image } from 'react-bootstrap';
 import logo from '../assets/Logo.png';
 import '../css/LoginScreen.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 
 function LoginScreen() {
-    const LoginHandle = () => {
+    const navigate = useNavigate();
+    const [email,setEmail]=useState('');
+    const [password,setPassword]=useState('');
+    const [authenticated, setauthenticated] = useState(
+        localStorage.getItem(localStorage.getItem("authenticated") || false)
+    );
+    
+    const LoginHandle = event => {
+        event.preventDefault();
+        const userAccount = {
+            createdAt:'',
+            email:email,
+            hash:password,
+            hashRT:'',
+        }
+        const URL='http://localhost:3000/auth/local/signin'
+    fetch(URL,{
+      method:'POST',
+      headers: {
+        'Accept': 'application/json; charset=utf-8',
+        'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify(userAccount),
+    })
+    .then(res =>res.json())
+    .then(data => {
+        if (data) {
+            localStorage.setItem("authenticated", true);
+            localStorage.setItem("email",email);
+            navigate("/home");
+        }
+        else {
+            setEmail('')
+            setPassword('')
+            console.error('Wrong Password or Email!');
+        }
+    })
 
     }
     return (
@@ -28,9 +65,9 @@ function LoginScreen() {
                     <Form>
                         <Form.Group className='login-form'>
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type='email' placeholder='Email'></Form.Control>
+                            <Form.Control type='email' placeholder='Email' value={email} onChange={event => setEmail(event.target.value)}></Form.Control>
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type='password' placeholder='Password'></Form.Control>
+                            <Form.Control type='password' placeholder='Password' value={password} onChange={event => setPassword(event.target.value)}></Form.Control>
                             <div className='d-flex justify-content-between'>
                             <Form.Check 
                                 type='checkbox'

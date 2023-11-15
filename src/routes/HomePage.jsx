@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/HomePage.css'
 import { Navbar, Container,NavDropdown,Nav, Image, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,18 +9,33 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { useNavigate } from 'react-router-dom';
 
 function Card() {}
 
-function HomePage(userInfo) {
+function HomePage() {
     //const [isLogin,setLogin]=useState(false);
+    const [authenticated, setauthenticated] = useState(null);
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("authenticated");
+    if (loggedInUser) {
+      setauthenticated(loggedInUser);
+    }
+    }, []);
+
+    const LogOutHandle=()=>{
+      setauthenticated(false)
+      console.log(authenticated)
+      localStorage.clear()
+    }
+
     function checkLogin() {
-        console.log("userinfo: "+userInfo)
-        if(Object.keys(userInfo).length !== 0)
+        console.log(authenticated)
+        if(authenticated)
         return (
-            <NavDropdown title="HI" id="basic-nav-dropdown">
+            <NavDropdown title="Hi" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/">User Profile</NavDropdown.Item>
-                <NavDropdown.Item href="/">Log out</NavDropdown.Item>
+                <NavDropdown.Item href="/home" onClick={LogOutHandle}>Log out</NavDropdown.Item>
             </NavDropdown>
             
         )
@@ -31,8 +46,7 @@ function HomePage(userInfo) {
             </Nav>
         )
     }
-
-    return (
+   return (
         <div>
           <Navbar collapseOnSelect className="myNav">
         <Container className='myContainer'>
