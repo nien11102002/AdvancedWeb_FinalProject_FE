@@ -9,6 +9,7 @@ import LandingPage from "./routes/LandingPage";
 import LoginScreen from "./routes/LoginScreen";
 import RegisterScreen from "./routes/RegisterScreen";
 import HomePage from "./routes/HomePage";
+import UserProfile from "./routes/UserProfile";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterScreen/>,
+  },
+  {
+    path: "/user-profile",
+    element: <UserProfile/>,
   },
 ]);
 

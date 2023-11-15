@@ -34,7 +34,7 @@ function HomePage() {
         if(authenticated)
         return (
             <NavDropdown title="Hi" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/">User Profile</NavDropdown.Item>
+                <NavDropdown.Item href="/user-profile">User Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/home" onClick={LogOutHandle}>Log out</NavDropdown.Item>
             </NavDropdown>
             
