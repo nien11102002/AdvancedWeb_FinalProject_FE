@@ -8,11 +8,11 @@ import {
   Route,
 } from "react-router-dom";
 import "./index.css";
-import LandingPage from "./routes/LandingPage";
-import LoginScreen from "./routes/LoginScreen";
-import RegisterScreen from "./routes/RegisterScreen";
-import HomePage from "./routes/HomePage";
-import UserProfile from "./routes/UserProfile";
+import LandingPage from "./pages/LandingPage";
+import LoginScreen from "./pages/LoginScreen";
+import RegisterScreen from "./pages/RegisterScreen";
+import HomePage from "./pages/HomePage";
+import UserProfile from "./pages/UserProfile";
 
 function App(){
     // const router = createBrowserRouter([
