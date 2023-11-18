@@ -21,7 +21,7 @@ function LoginScreen() {
             hash:password,
             hashRT:'',
         }
-        const URL='http://advancedweb-finalproject-be.onrender.com/auth/local/signin'
+        const URL='https://advancedweb-finalproject-be.onrender.com/auth/local/signin'
     fetch(URL,{
       method:'POST',
       headers: {

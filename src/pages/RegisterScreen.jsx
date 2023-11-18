@@ -10,7 +10,7 @@ function RegisterScreen() {
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
     const RegisterHandle = (event) => {
-        const URL='http://advancedweb-finalproject-be.onrender.com/auth/local/signup'
+        const URL='https://advancedweb-finalproject-be.onrender.com/auth/local/signup'
         event.preventDefault();
         const userAccount = {
             email:email,
