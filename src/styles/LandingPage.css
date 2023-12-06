@@ -1,0 +1,61 @@
+.myNav {
+  background-color: white;
+  height: 100px;
+}
+
+.myContainer {
+  margin: 0px 10px 0 10px !important;
+  max-width: 2000px !important;
+}
+
+.myButton {
+  position: absolute;
+  bottom: 20%;
+  left: 15%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 70px;
+  background-color: white !important;
+  border-radius: 40px;
+  font-weight: bold;
+}
+
+.btn-color {
+  background: white;
+}
+
+.nav-link {
+  color: #06234f;
+  font-size: 20px;
+}
+
+.color-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(12, 99, 231, 0.8) 40%,
+    rgba(12, 99, 231, 0)
+  );
+  pointer-events: none;
+}
+
+.login-button {
+  width: 170px;
+  border-radius: 17px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.text-container {
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translate(-39%, -50%);
+  z-index: 1;
+  text-align: left;
+  color: white;
+}

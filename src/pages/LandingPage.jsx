@@ -1,52 +1,81 @@
-import React from 'react';
-import '../css/LandingPage.css'
-import { Navbar, Container,NavDropdown,Nav, Image, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../assets/Logo.svg';
-import LandingPagePicture from '../assets/landingPage_img.jpg';
-import { useNavigate } from 'react-router-dom';
+import "../styles/LandingPage.css";
+import { Navbar, Container, Nav, Image, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import LandingPagePicture from "../assets/landingPage_img.png";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/Logo.svg";
+import Brand from "../components/Brand";
 
 function LandingPage() {
-    const navigate=useNavigate();
-    function btn_routeChange(){
-      let path='/home';
-      navigate(path);
-    }
+  const navigate = useNavigate();
+  function btn_routeChange() {
+    let path = "/register";
+    navigate(path);
+  }
 
-    return (
-        <div>
-          <Navbar collapseOnSelect className="myNav">
-        <Container className='myContainer'>
-            <Navbar.Brand href='/'><Image src={logo} className='logo'></Image></Navbar.Brand>
+  function btn_Login() {
+    let path = "/login";
+    navigate(path);
+  }
+
+  return (
+    <div>
+      <Navbar collapseOnSelect className="myNav">
+        <Container className="myContainer">
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className='me-auto'>
-                <Nav.Link href="/" className='brand'>EduCat</Nav.Link>
-            </Nav>
-            <Nav className="me-auto mid-nav">
-              <Nav.Link href="/home">Home</Nav.Link>
-              <Nav.Link href="/courses">Courses</Nav.Link>
-              <Nav.Link href="/categories">Categories</Nav.Link>
-              <Nav.Link href="/pricing">Pricing</Nav.Link>
+            <Brand></Brand>
+            <Nav className="me-auto d-flex align-items-center">
+              <Nav.Link className="nav-link tw-mr-8" href="/home">
+                Home
+              </Nav.Link>
+              <Nav.Link className="nav-link tw-mr-8" href="/about-us">
+                About us
+              </Nav.Link>
+              <Nav.Link className="nav-link tw-mr-8" href="/classes">
+                Classes
+              </Nav.Link>
+              <Nav.Link className="nav-link tw-mr-8" href="/help">
+                Help
+              </Nav.Link>
             </Nav>
 
             <Nav>
-              <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link eventKey={2} href="/register">
-                Register
-              </Nav.Link>
+              <Button onClick={btn_Login} className="login-button">
+                Login
+              </Button>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-          <div className='image-container position-relative'>
-            <Image src={LandingPagePicture} className='w-100'></Image>
-            {/* <a href='/home'> */}
-              <Button className='myButton' size='lg' variant='color' onClick={btn_routeChange}>Learn More</Button>
-            {/* </a> */}
+      <div className="image-container position-relative">
+        <Image src={LandingPagePicture} className="w-100"></Image>
+        <div className="color-overlay"></div>
+        <div className="text-container">
+          <div style={{ fontSize: "70px", fontWeight: "bold" }}>
+            Modern class
+          </div>
+          <div style={{ fontSize: "70px", fontWeight: "bold" }}>
+            learning with fun
+          </div>
+          <div style={{ fontSize: "20px" }}>
+            Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+          </div>
+          <div style={{ fontSize: "20px" }}>
+            vulputate libero et velit interdum, ac aliquet odio mattis.
           </div>
         </div>
-    );
+        <Button
+          className="myButton"
+          size="lg"
+          variant="color"
+          onClick={btn_routeChange}
+        >
+          Get Started
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export default LandingPage;

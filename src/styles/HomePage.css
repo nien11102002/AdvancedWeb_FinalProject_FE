@@ -1,0 +1,12 @@
+.card-avatar {
+    width: 90%;
+    height: 90%;
+    margin: 10px;
+}
+
+.dropdown-menu.show {
+    float: right !important;
+    right: 0 !important;
+    left: auto !important;
+    align-items: end;
+}

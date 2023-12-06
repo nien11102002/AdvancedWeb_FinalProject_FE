@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import '../css/UserProfile.css'
+import '../styles/UserProfile.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function UserProfile(props) {
