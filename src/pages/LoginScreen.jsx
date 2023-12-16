@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
-import logo from "../assets/Logo.png";
+import {
+  Button,
+  Container,
+  Form,
+  InputGroup,
+  Nav,
+  Navbar,
+  Image,
+} from "react-bootstrap";
+import facebook_logo from "../assets/facebook_logo.svg";
+import google_logo from "../assets/google_logo.svg";
 import "../styles/LoginScreen.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
@@ -52,53 +61,69 @@ function LoginScreen() {
         <Container className="myContainer">
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Brand></Brand>
-          <Nav.Link className="signup-link">Sign up</Nav.Link>
+          <Nav.Link className="signup-link" href="/register">
+            Sign up
+          </Nav.Link>
         </Container>
       </Navbar>
       <div className="login-container">
-        <h1>Login</h1>
-        <div>
-          {/* eslint-disable-next-line react/no-unescaped-entities*/}
-          <span>Don't have an account? </span>
-          <a href="/register" style={{ color: "#EAC696" }}>
-            Create now
-          </a>
-        </div>
+        <h1 className="title">WELCOME!</h1>
         <Form>
           <Form.Group className="login-form">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            ></Form.Control>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            ></Form.Control>
-            <div className="d-flex justify-content-between">
-              <Form.Check
-                type="checkbox"
-                id="default-checkbox"
-                label="Save account"
+            <InputGroup className="mb-3">
+              <InputGroup.Text id="basic-addon1">
+                <i className="fa-solid fa-user"></i>
+              </InputGroup.Text>
+              <Form.Control
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
               />
-              <a href="/" style={{ color: "#EAC696" }}>
-                Forgot Password?
-              </a>
-            </div>
+            </InputGroup>
+
+            <InputGroup className="mb-3">
+              <InputGroup.Text id="basic-addon1">
+                <i className="fa-solid fa-lock"></i>
+              </InputGroup.Text>
+              <Form.Control
+                placeholder="Password"
+                aria-label="Password"
+                aria-describedby="basic-addon1"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </InputGroup>
+
             <Button
-              variant="color"
+              variant="dark"
               className="login-button"
               onClick={LoginHandle}
             >
               Login
             </Button>
+
+            <div className="d-flex justify-content-end">
+              <a href="/" style={{ color: "#06234F", textDecoration: "none" }}>
+                Forgot Password?
+              </a>
+            </div>
+
+            <hr />
+            <div className="d-flex justify-content-center ">OR LOGIN WITH</div>
           </Form.Group>
         </Form>
+        <Container className="logo-container d-flex justify-content-center ">
+          <Button variant="link">
+            <Image className="logo" src={facebook_logo} alt="Facebook Login" />
+          </Button>
+          <Button variant="link">
+            <Image className="logo" src={google_logo} alt="Google Login" />
+          </Button>
+        </Container>
       </div>
     </div>
   );
