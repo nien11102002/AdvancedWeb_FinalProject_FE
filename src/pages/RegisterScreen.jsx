@@ -28,6 +28,8 @@ function RegisterScreen() {
     const userAccount = {
       email: email,
       hash: password,
+      username: username,
+      fullname: fullname,
     };
     fetch(URL, {
       method: "POST",
@@ -46,6 +48,8 @@ function RegisterScreen() {
         } else {
           setEmail("");
           setPassword("");
+          setFullname("");
+          setUsername("");
           console.error("Email has already existed!");
         }
       });

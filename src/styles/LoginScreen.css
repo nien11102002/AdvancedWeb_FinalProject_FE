@@ -1,7 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
-
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "IBM Plex Mono", monospace !important;
 }
 
 .login-container {
@@ -43,4 +41,29 @@ body {
 
 .logo-container Button {
   width: 70px;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+}
+
+#avatar-dropdown {
+  width: 50px;
+  margin: 0 !important;
+  padding: 0 !important;
 }
