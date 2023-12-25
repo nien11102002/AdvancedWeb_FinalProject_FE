@@ -90,3 +90,11 @@ td {
 .content {
   margin: 20px;
 }
+
+.user-label {
+  width: 200px !important;
+}
+
+.user-input {
+  width: 600px;
+}

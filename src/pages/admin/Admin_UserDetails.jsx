@@ -61,10 +61,11 @@ export default function Admin_UserDetails({}) {
         <Col xs={8}>
           <Container className="table-container">
             <Form onSubmit={handleSubmit} className="detail-form bg-white">
-              <Container>
+              <Container className="d-flex flex-column ">
                 <Form.Group>
-                  <Form.Label>Full Name</Form.Label>
+                  <Form.Label className="user-label">Full Name</Form.Label>
                   <Form.Control
+                    className="user-input"
                     type="text"
                     value={fullName}
                     onChange={(event) => setFullName(event.target.value)}
@@ -73,8 +74,9 @@ export default function Admin_UserDetails({}) {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Date of birth</Form.Label>
+                  <Form.Label className="user-label">Date of birth</Form.Label>
                   <Form.Control
+                    className="user-input"
                     type="date"
                     value={dob}
                     onChange={(event) => setDOB(event.target.value)}
@@ -83,8 +85,9 @@ export default function Admin_UserDetails({}) {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="user-label">Email</Form.Label>
                   <Form.Control
+                    className="user-input"
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
@@ -93,7 +96,7 @@ export default function Admin_UserDetails({}) {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label>Gender</Form.Label>
+                  <Form.Label style={{ width: "200px" }}>Gender</Form.Label>
                   <Form.Check
                     type="radio"
                     value="male"
