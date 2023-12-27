@@ -47,24 +47,16 @@ export default function Admin_ClassManagement() {
               </tr>
             </thead>
             <tbody>
-              {items ? (
-                items?.map((row, index) => (
-                  <tr
-                    key={index}
-                    onClick={ItemClickHandle()}
-                    className="d-flex"
-                  >
-                    <td>{row.className}</td>
-                    <td>{row.classID}</td>
-                    <td>{row.createdBy}</td>
-                    <td>{row.participants}</td>
-                    <td>{row.status}</td>
-                    <td></td>
-                  </tr>
-                ))
-              ) : (
-                <></>
-              )}
+              {items?.map((row, index) => (
+                <tr key={index} onClick={ItemClickHandle()}>
+                  <td>{row.className}</td>
+                  <td>{row.classID}</td>
+                  <td>{row.createdBy}</td>
+                  <td>{row.participants}</td>
+                  <td>{row.status}</td>
+                  <td></td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </div>

@@ -14,6 +14,7 @@ import Admin_ClassManagement from "./pages/admin/Admin_ClassManagement";
 import Admin_ClassDetail from "./pages/admin/Admin_ClassDetail";
 import Student_UserProfile from "./pages/student/Student_UserProfile";
 import Student_Notification from "./pages/student/Student_Notification";
+import Teacher_HomePage from "./pages/teacher/Teacher_HomePage";
 
 function App() {
   return (
@@ -36,14 +37,17 @@ function App() {
         element={<Student_Notification />}
       />
 
+      {/* Teacher */}
+      <Route path="/teacher" element={<Teacher_HomePage />} />
+
       {/* Admin */}
+      <Route path="admin/user-management" element={<Admin_UserManagement />} />
       <Route path="admin/user-detail/:id" element={<Admin_UserDetail />} />
       <Route
         path="admin/class-management/"
         element={<Admin_ClassManagement />}
       />
       <Route path="admin/class-detail/:id" element={<Admin_ClassDetail />} />
-      <Route path="admin/user-management" element={<Admin_UserManagement />} />
     </Routes>
   );
 }

@@ -4,7 +4,7 @@ import "../../styles/Admin_ClassDetail.css";
 import { Container, Row, Col, Nav, Tab, Form, Button } from "react-bootstrap";
 import ScrollableTable from "../../components/ScrollableTable";
 
-export default function () {
+export default function Student_ClassDetail({ id }) {
   const description_row = 8;
   const class_detail = {
     className: "Data Structure and Algorithms",
@@ -53,7 +53,7 @@ export default function () {
   return (
     <div>
       <Student_NavBar />
-      <Container>
+      <div className="d-flex flex-column mx-5">
         <h1>{class_detail.className}</h1>
         <Tab.Container id="left" defaultActiveKey="first">
           <Row>
@@ -67,6 +67,11 @@ export default function () {
                 <Nav.Item>
                   <Nav.Link eventKey="second" style={{ textAlign: "center" }}>
                     Participants
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="third" style={{ textAlign: "center" }}>
+                    Grade
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -132,11 +137,13 @@ export default function () {
                     disabled={true}
                   ></ScrollableTable>
                 </Tab.Pane>
+
+                <Tab.Pane eventKey="third"></Tab.Pane>
               </Tab.Content>
             </Col>
           </Row>
         </Tab.Container>
-      </Container>
+      </div>
     </div>
   );
 }

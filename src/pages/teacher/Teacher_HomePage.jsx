@@ -55,24 +55,40 @@ const classDetail = [
   },
 ];
 
-export default function Student_HomePage() {
-  const [showModal, setShowModal] = useState(false);
+export default function Teacher_HomePage() {
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredClasses, setFilteredClasses] = useState(classDetail);
-
-  const handleClassDetail = () => {};
-
-  const handleJoinClassModal = () => {
-    setShowModal(true);
+  const [newClassName, setNewClassName] = useState("");
+  const [newClassCode, setNewClassCode] = useState("");
+  const [newClassDescription, setNewClassDescription] = useState("");
+  const [newClassSchedule, setNewClassSchedule] = useState("");
+  const [newClassTime, setNewClassTime] = useState("");
+  //Create Class Modal
+  const handleCreateClassModal = () => {
+    setShowCreateModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseCreateClassModal = () => {
+    setShowCreateModal(false);
+  };
+
+  const handleCreateClass = () => {};
+
+  //Join Class Modal
+  const handleJoinClassModal = () => {
+    setShowJoinModal(true);
+  };
+
+  const handleCloseJoinClassModal = () => {
+    setShowJoinModal(false);
   };
 
   const handleJoinClass = () => {};
 
+  //Search Bar Logic
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     filterClasses(event.target.value);
@@ -103,7 +119,10 @@ export default function Student_HomePage() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </Button>
             <Button variant="custom" onClick={handleJoinClassModal}>
-              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <i className="fa-solid fa-arrow-right-to-bracket"></i>
+            </Button>
+            <Button variant="custom" onClick={handleCreateClassModal}>
+              <i className="fa-solid fa-plus"></i>
             </Button>
           </Form>
         </Container>
@@ -111,17 +130,15 @@ export default function Student_HomePage() {
           <Row>
             {filteredClasses.map((value, index) => (
               <Col key={index} md={4} className="mb-3">
-                <ClassCard
-                  classDetail={value}
-                  onClick={handleClassDetail}
-                ></ClassCard>
+                <ClassCard classDetail={value}></ClassCard>
               </Col>
             ))}
           </Row>
         </Container>
       </div>
 
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+      {/* Join Class Modal */}
+      <Modal show={showJoinModal} onHide={handleCloseJoinClassModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Join Class</Modal.Title>
         </Modal.Header>
@@ -137,11 +154,81 @@ export default function Student_HomePage() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button variant="secondary" onClick={handleCloseJoinClassModal}>
             Close
           </Button>
           <Button variant="primary" onClick={handleJoinClass}>
             Join
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Create Class Modal */}
+      <Modal
+        dialogClassName="custom-modal"
+        show={showCreateModal}
+        onHide={handleCloseCreateClassModal}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Class</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label className="class-label">Class Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Class Name"
+                value={newClassName}
+                onChange={(event) => setNewClassName(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label className="class-label">Class Code</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Class Code"
+                value={newClassCode}
+                onChange={(event) => setNewClassCode(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label className="class-label">Class Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                placeholder="Description"
+                rows={8}
+                value={newClassDescription}
+                onChange={(event) => setNewClassDescription(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label className="class-label">Class Schedule</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Schedule"
+                value={newClassSchedule}
+                onChange={(event) => setNewClassSchedule(event.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label className="class-label">Class Time</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Time"
+                value={newClassTime}
+                onChange={(event) => setNewClassTime(event.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCreateClassModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCreateClass}>
+            Create
           </Button>
         </Modal.Footer>
       </Modal>

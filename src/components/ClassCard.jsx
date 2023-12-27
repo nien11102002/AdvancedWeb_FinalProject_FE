@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 
 export default function ClassCard({ classDetail, onClick }) {
   const { id, name } = classDetail;
-  const classDetailUrl = `/class-detail/${id}`;
+  const classDetailUrl = `class-detail/${id}`;
   return (
     <Link to={classDetailUrl} className="redirect-link">
-      <Card onClick={onClick()} className="class-card">
+      <Card className="class-card">
         <Card.Header>{classDetail?.name}</Card.Header>
         <Card.Body>
           <Card.Text>{classDetail?.description}</Card.Text>
