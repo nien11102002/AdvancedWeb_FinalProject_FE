@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import avatar from "../../assets/Logo.svg";
 
-export default function Admin_UserDetails({}) {
+export default function Admin_UserDetail({}) {
   const user = {
     fullName: "Nguyễn Duy Niên",
     dob: "2002-10-11",

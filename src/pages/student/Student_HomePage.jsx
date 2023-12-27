@@ -9,7 +9,7 @@ import {
   Row,
 } from "react-bootstrap";
 import ClassCard from "../../components/ClassCard";
-import "../../styles/Admin_UsersManagement.css";
+import "../../styles/StudentHomePage.css";
 
 const classDetail = [
   {
@@ -59,31 +59,33 @@ export default function Student_HomePage() {
   return (
     <div>
       <Student_NavBar></Student_NavBar>
-      <Container className="search-container">
-        <Form className="search-bar d-flex">
-          <FormControl
-            type="text"
-            name="searchTerm"
-            placeholder="Search"
-            className="mr-sm-2"
-          />
-          <Button type="submit" variant="custom">
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </Button>
-        </Form>
-      </Container>
-      <Container className="class-list">
-        <Row>
-          {classDetail.map((value, index) => (
-            <Col key={index} md={4} className="mb-3">
-              <ClassCard
-                classDetail={value}
-                onClick={ClassDetailHandle()}
-              ></ClassCard>
-            </Col>
-          ))}
-        </Row>
-      </Container>
+      <div className="d-flex flex-column align-items-center ">
+        <Container className="student-search-container">
+          <Form className="student-search-bar d-flex">
+            <FormControl
+              type="text"
+              name="searchTerm"
+              placeholder="Search"
+              className="mr-sm-2"
+            />
+            <Button type="submit" variant="custom">
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </Button>
+          </Form>
+        </Container>
+        <Container className="student-class-list">
+          <Row>
+            {classDetail.map((value, index) => (
+              <Col key={index} md={4} className="mb-3">
+                <ClassCard
+                  classDetail={value}
+                  onClick={ClassDetailHandle}
+                ></ClassCard>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      </div>
     </div>
   );
 }

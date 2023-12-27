@@ -10,7 +10,7 @@ export default function Student_NavBar({ hasNewNotification }) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Brand></Brand>
         <Nav className="me-auto">
-          <Nav.Link href="/home">Home</Nav.Link>
+          <Nav.Link href="/student">Home</Nav.Link>
           <Nav.Link href="/notification">Notification</Nav.Link>
           <Nav.Link href="/profile">Profile</Nav.Link>
         </Nav>

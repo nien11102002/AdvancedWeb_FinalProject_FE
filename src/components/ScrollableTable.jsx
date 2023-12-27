@@ -3,14 +3,10 @@ import { Table } from "react-bootstrap";
 import "../styles/Admin_UsersManagement.css";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminUserTable({ items }) {
+export default function AdminUserTable({ items, disabled }) {
   const navigate = useNavigate();
-  useEffect(() => {
-    return () => {
-      console.log(items);
-    };
-  }, []);
   const ItemClickHandle = (index) => {
+    if (disabled) return;
     const path = `/admin/user-detail/${items[index].id}`;
     navigate(path);
   };

@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import ScrollableTable from "../../components/ScrollableTable";
 
-export default function Admin_UsersManagement() {
+export default function Admin_UserManagement() {
   const user_list = [
     {
       id: "01",

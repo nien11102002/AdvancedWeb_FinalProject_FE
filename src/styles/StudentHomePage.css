@@ -1,0 +1,32 @@
+.student-search-container {
+  min-width: 1540px !important;
+  padding: 10px 20px;
+  background-color: #d9d9d9;
+}
+
+.student-class-list {
+  min-width: 1540px !important;
+  padding: 20px 10px;
+  background-color: #d9d9d9;
+  margin-top: 10px;
+}
+
+.redirect-link {
+  text-decoration: none;
+}
+
+.text {
+  width: 170px !important;
+  text-align: left;
+  margin-left: 10px;
+}
+
+i {
+  width: 30px;
+}
+
+.content-container {
+  min-width: 1540px !important;
+  margin-left: auto;
+  margin-right: auto;
+}
