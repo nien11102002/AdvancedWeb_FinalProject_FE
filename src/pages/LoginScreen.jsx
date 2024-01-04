@@ -68,53 +68,47 @@ function LoginScreen() {
       </Navbar>
       <div className="login-container">
         <h1 className="title">WELCOME!</h1>
-        <Form>
-          <Form.Group className="login-form">
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-user"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="Username"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </InputGroup>
+        <Form className="login-form">
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-user"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="Username"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-lock"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="Password"
-                aria-label="Password"
-                aria-describedby="basic-addon1"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-lock"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="Password"
+              aria-label="Password"
+              aria-describedby="basic-addon1"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </InputGroup>
 
-            <Button
-              variant="dark"
-              className="login-button"
-              onClick={LoginHandle}
-            >
-              Login
-            </Button>
+          <Button variant="dark" className="login-button" onClick={LoginHandle}>
+            Login
+          </Button>
 
-            <div className="d-flex justify-content-end">
-              <a href="/" style={{ color: "#06234F", textDecoration: "none" }}>
-                Forgot Password?
-              </a>
-            </div>
+          <div className="d-flex justify-content-end">
+            <a href="/" style={{ color: "#06234F", textDecoration: "none" }}>
+              Forgot Password?
+            </a>
+          </div>
 
-            <hr />
-            <div className="d-flex justify-content-center ">OR LOGIN WITH</div>
-          </Form.Group>
+          <hr />
+          <div className="d-flex justify-content-center ">OR LOGIN WITH</div>
         </Form>
         <Container className="logo-container d-flex justify-content-center ">
           <Button variant="link">

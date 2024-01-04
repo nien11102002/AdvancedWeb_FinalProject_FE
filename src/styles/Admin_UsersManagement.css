@@ -11,7 +11,7 @@
 
 .table-container {
   min-height: 800px;
-  padding: 10px 20px;
+  padding: 20px;
   background-color: #d9d9d9;
   width: 100%;
 }
@@ -65,12 +65,14 @@ td {
 
 .detail-form {
   min-height: 100%;
-  padding: 20px 0;
+  padding: 20px 30px;
 }
 
 .left-container {
   background-color: #d9d9d9;
   padding: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 .content {
@@ -97,4 +99,23 @@ td {
 .btn-detail,
 .btn-account {
   margin-left: 30px;
+}
+
+.custom-file-upload {
+  text-align: center;
+}
+
+.searchBar {
+  width: 1200px;
+}
+
+.filter-label {
+  width: 150px;
+  vertical-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-field {
+  width: 400px;
 }

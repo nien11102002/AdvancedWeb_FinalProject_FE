@@ -67,74 +67,72 @@ function RegisterScreen() {
       </Navbar>
       <div className="register-container">
         <h1 className="title">JOIN US!</h1>
-        <Form>
-          <Form.Group className="register-form">
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-user"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="USERNAME"
-                aria-label="USERNAME"
-                aria-describedby="basic-addon1"
-                type="username"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-              />
-            </InputGroup>
+        <Form className="register-form">
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-user"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="USERNAME"
+              aria-label="USERNAME"
+              aria-describedby="basic-addon1"
+              type="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-user"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="FULLNAME"
-                aria-label="FULLNAME"
-                aria-describedby="basic-addon1"
-                value={fullname}
-                onChange={(event) => setFullname(event.target.value)}
-              />
-            </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-user"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="FULLNAME"
+              aria-label="FULLNAME"
+              aria-describedby="basic-addon1"
+              value={fullname}
+              onChange={(event) => setFullname(event.target.value)}
+            />
+          </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-lock"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="PASSWORD"
-                aria-label="PASSWORD"
-                aria-describedby="basic-addon1"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-lock"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="PASSWORD"
+              aria-label="PASSWORD"
+              aria-describedby="basic-addon1"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="basic-addon1">
-                <i className="fa-solid fa-envelope"></i>
-              </InputGroup.Text>
-              <Form.Control
-                placeholder="EMAIL"
-                aria-label="EMAIL"
-                aria-describedby="basic-addon1"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </InputGroup>
+          <InputGroup className="mb-3">
+            <InputGroup.Text id="basic-addon1">
+              <i className="fa-solid fa-envelope"></i>
+            </InputGroup.Text>
+            <Form.Control
+              placeholder="EMAIL"
+              aria-label="EMAIL"
+              aria-describedby="basic-addon1"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </InputGroup>
 
-            <Button
-              variant="dark"
-              className="register-button"
-              onClick={RegisterHandle}
-            >
-              Register
-            </Button>
+          <Button
+            variant="dark"
+            className="register-button"
+            onClick={RegisterHandle}
+          >
+            Register
+          </Button>
 
-            <hr />
-            <div className="d-flex justify-content-center ">OR LOGIN WITH</div>
-          </Form.Group>
+          <hr />
+          <div className="d-flex justify-content-center ">OR LOGIN WITH</div>
         </Form>
         <Container className="logo-container d-flex justify-content-center ">
           <Button variant="link">
