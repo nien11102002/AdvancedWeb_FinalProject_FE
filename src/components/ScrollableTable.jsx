@@ -24,7 +24,7 @@ export default function AdminUserTable({ items, disabled }) {
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
-            <th>Operation</th>
+            <th>Student ID</th>
           </tr>
         </thead>
         <tbody>

@@ -3,11 +3,11 @@ import Student_NavBar from "../../components/Student_NavBar";
 import "../../styles/Admin_ClassDetail.css";
 import { Table, Row, Col, Nav, Tab, Form, Button } from "react-bootstrap";
 import ScrollableTable from "../../components/ScrollableTable";
+import { DndProvider } from "react-dnd";
 import DragAndDropRow from "../../components/DragAndDropRow";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
 
-export default function Student_ClassDetail({ id }) {
+export default function Teacher_ClassDetail({ id }) {
   const description_row = 8;
   const class_detail = {
     className: "Data Structure and Algorithms",
@@ -53,20 +53,52 @@ export default function Student_ClassDetail({ id }) {
     },
   ];
 
-  const grade_list = [
-    { name: "Grade 1", percentage: 50 },
-    { name: "Grade 2", percentage: 40 },
-    { name: "Grade 3", percentage: 10 },
-  ];
+  const grade_list = [];
 
-  const [grades, setGrades] = useState([]);
+  const [initialGrades, setInitialGrades] = useState([]);
+  const [grades, setGrades] = useState([{ name: "", percentage: "" }]);
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
-    fetchData();
+    setInitialGrades(grade_list);
+    setGrades(grade_list);
   }, []);
 
-  const fetchData = () => {
-    setGrades(grade_list);
+  const handleAddRow = () => {
+    setGrades([...grades, { name: "", percentage: "" }]);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedGrades = [...grades];
+    updatedGrades[index] = { ...updatedGrades[index], [field]: value };
+    setGrades(updatedGrades);
+  };
+
+  const moveRow = (fromIndex, toIndex) => {
+    const updatedGrades = [...grades];
+    const [removed] = updatedGrades.splice(fromIndex, 1);
+    updatedGrades.splice(toIndex, 0, removed);
+    setGrades(updatedGrades);
+  };
+
+  const deleteRow = (index) => {
+    const updatedGrades = grades.filter((grade, i) => i !== index);
+    setGrades(updatedGrades);
+  };
+
+  const handleSaveGrades = () => {
+    const updatedGradeList = [...grades];
+    setInitialGrades([...grades]);
+    toggleEdit();
+  };
+
+  const handleCancel = () => {
+    setGrades([...initialGrades]);
+    toggleEdit();
+  };
+
+  const toggleEdit = () => {
+    setEditable(!editable);
   };
 
   return (
@@ -157,7 +189,6 @@ export default function Student_ClassDetail({ id }) {
                       disabled={true}
                     ></ScrollableTable>
                   </Tab.Pane>
-
                   <Tab.Pane eventKey="third">
                     <Form>
                       <Table striped bordered hover>
@@ -166,6 +197,7 @@ export default function Student_ClassDetail({ id }) {
                             <th></th>
                             <th>Grade Name</th>
                             <th>Grade Percentage</th>
+                            {editable ? <th>Action</th> : <></>}
                           </tr>
                         </thead>
                         <tbody>
@@ -173,14 +205,43 @@ export default function Student_ClassDetail({ id }) {
                             <DragAndDropRow
                               key={index}
                               index={index}
+                              moveRow={moveRow}
+                              deleteRow={deleteRow}
+                              handleInputChange={handleInputChange}
                               name={grade.name}
                               percentage={grade.percentage}
-                              readMode={true}
+                              readMode={!editable}
                             />
                           ))}
                         </tbody>
                       </Table>
+                      {editable ? (
+                        <Button variant="primary" onClick={handleAddRow}>
+                          +
+                        </Button>
+                      ) : (
+                        <></>
+                      )}
                     </Form>
+
+                    {editable ? (
+                      <div style={{ marginTop: "10px" }}>
+                        <Button variant="info" onClick={handleSaveGrades}>
+                          Save
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={handleCancel}
+                          style={{ marginLeft: "10px" }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button variant="info" onClick={toggleEdit}>
+                        Edit
+                      </Button>
+                    )}
                   </Tab.Pane>
                 </Tab.Content>
               </Col>
