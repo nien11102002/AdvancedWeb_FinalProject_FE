@@ -19,8 +19,6 @@ function RegisterScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [fullname, setFullname] = useState("");
   const RegisterHandle = (event) => {
     const URL =
       "https://advancedweb-finalproject-be.onrender.com/auth/local/signup";
@@ -28,8 +26,6 @@ function RegisterScreen() {
     const userAccount = {
       email: email,
       hash: password,
-      username: username,
-      fullname: fullname,
     };
     fetch(URL, {
       method: "POST",
@@ -44,12 +40,10 @@ function RegisterScreen() {
         if (data) {
           localStorage.setItem("authenticated", true);
           localStorage.setItem("email", email);
-          navigate("/home");
+          navigate("/");
         } else {
           setEmail("");
           setPassword("");
-          setFullname("");
-          setUsername("");
           console.error("Email has already existed!");
         }
       });
@@ -70,28 +64,15 @@ function RegisterScreen() {
         <Form className="register-form">
           <InputGroup className="mb-3">
             <InputGroup.Text id="basic-addon1">
-              <i className="fa-solid fa-user"></i>
+              <i className="fa-solid fa-envelope"></i>
             </InputGroup.Text>
             <Form.Control
-              placeholder="USERNAME"
-              aria-label="USERNAME"
+              placeholder="EMAIL"
+              aria-label="EMAIL"
               aria-describedby="basic-addon1"
-              type="username"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-            />
-          </InputGroup>
-
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1">
-              <i className="fa-solid fa-user"></i>
-            </InputGroup.Text>
-            <Form.Control
-              placeholder="FULLNAME"
-              aria-label="FULLNAME"
-              aria-describedby="basic-addon1"
-              value={fullname}
-              onChange={(event) => setFullname(event.target.value)}
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </InputGroup>
 
@@ -109,19 +90,22 @@ function RegisterScreen() {
             />
           </InputGroup>
 
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1">
-              <i className="fa-solid fa-envelope"></i>
-            </InputGroup.Text>
-            <Form.Control
-              placeholder="EMAIL"
-              aria-label="EMAIL"
-              aria-describedby="basic-addon1"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+          <div key={`inline-radio`} className="mb-3">
+            <Form.Check
+              inline
+              label="Student"
+              name="group1"
+              type={type}
+              id={`inline-radio-1`}
             />
-          </InputGroup>
+            <Form.Check
+              inline
+              label="Teacher"
+              name="group1"
+              type={type}
+              id={`inline-radio-2`}
+            />
+          </div>
 
           <Button
             variant="dark"

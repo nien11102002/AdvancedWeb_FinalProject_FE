@@ -20,7 +20,6 @@ export default function Admin_NavBar({ hasNewNotification }) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>Users </Dropdown.Item>
-              <Dropdown.Item>Settings</Dropdown.Item>
               <Dropdown.Item>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

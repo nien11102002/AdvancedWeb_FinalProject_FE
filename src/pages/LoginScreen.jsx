@@ -14,6 +14,7 @@ import "../styles/LoginScreen.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import Brand from "../components/Brand";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 function LoginScreen() {
   const navigate = useNavigate();
@@ -55,6 +56,18 @@ function LoginScreen() {
         }
       });
   };
+
+  const handleGoogleLogin = (response) => {
+    console.log("Google login success:", response);
+    // Handle the successful login, e.g., set user state or send the token to your server.
+    // You can use the response.accessToken to get the Google access token.
+  };
+
+  const handleGoogleLoginError = (error) => {
+    console.error("Google login error:", error);
+    // Handle login error.
+  };
+
   return (
     <div className="">
       <Navbar collapseOnSelect className="myNav">
@@ -74,8 +87,8 @@ function LoginScreen() {
               <i className="fa-solid fa-user"></i>
             </InputGroup.Text>
             <Form.Control
-              placeholder="Username"
-              aria-label="Username"
+              placeholder="Email"
+              aria-label="Email"
               aria-describedby="basic-addon1"
               type="email"
               value={email}
@@ -114,9 +127,13 @@ function LoginScreen() {
           <Button variant="link">
             <Image className="logo" src={facebook_logo} alt="Facebook Login" />
           </Button>
-          <Button variant="link">
-            <Image className="logo" src={google_logo} alt="Google Login" />
-          </Button>
+          <GoogleOAuthProvider clientId="1008597197236-msv1146f6rifk05050lb7lmmpul2rk0m.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={handleGoogleLoginError}
+              redirectUri="https://advancedweb-finalproject-educat-be.onrender.com/auth/google/login"
+            />
+          </GoogleOAuthProvider>
         </Container>
       </div>
     </div>

@@ -56,6 +56,12 @@ export default function Student_NavBar({ hasNewNotification }) {
     navigate(path);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+
+    navigate("/");
+  };
+
   return (
     <Navbar>
       <Container className="myContainer">
@@ -95,7 +101,7 @@ export default function Student_NavBar({ hasNewNotification }) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item href="/user-profile">Profile</Dropdown.Item>
-              <Dropdown.Item>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Nav>
