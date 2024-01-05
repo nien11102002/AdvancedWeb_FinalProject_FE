@@ -30,3 +30,15 @@ i {
   margin-left: auto;
   margin-right: auto;
 }
+
+.item-title {
+  font-size: medium;
+  margin: 5px 5px;
+}
+
+.dropDown-item {
+  max-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

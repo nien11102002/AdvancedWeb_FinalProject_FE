@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Student_NavBar from "../../components/Student_NavBar";
 import { Card, Col, Nav, Row, Tab } from "react-bootstrap";
 import "../../styles/Student_Notification.css";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-export default function Student_Notification({ ID }) {
+export default function Student_Notification({}) {
   const mail = [
     {
       id: "01",
@@ -35,6 +36,10 @@ export default function Student_Notification({ ID }) {
     },
   ];
 
+  let { ID } = useParams();
+  console.log(ID);
+  const [defaultTabKey, setDefaultTabKey] = useState(String(ID) || "01");
+  const [loading, setLoading] = useState(true);
   const [selectedMail, setSelectedMail] = useState({
     id: "",
     title: "",
@@ -43,14 +48,32 @@ export default function Student_Notification({ ID }) {
     sentBy: "",
   });
   const [mailID, setMailID] = useState("");
+  const [mails, setMails] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setMails(mail);
+  }, []);
+
+  useEffect(() => {
+    setDefaultTabKey(String(ID) || "01");
+    if (ID && mails.length > 0) {
+      const foundMail = mails.find((mail) => mail.id === String(ID));
+      if (foundMail) {
+        setSelectedMail(foundMail);
+      } else {
+        console.error(`Mail with ID ${ID} not found`);
+      }
+    }
+  }, [ID, mails]);
 
   const handleMailClick = (event) => {
     const selectedMailID = event.currentTarget.getAttribute(
       "data-rr-ui-event-key"
     );
-    const chosenMail = mail[selectedMailID];
+    const chosenMail = mails[selectedMailID];
     const body = chosenMail.body;
-    setMailID(selectedMailID);
+    setMailID(String(selectedMailID));
     setSelectedMail({
       id: chosenMail.id,
       title: chosenMail.title,
@@ -58,16 +81,17 @@ export default function Student_Notification({ ID }) {
       body: body,
       sentBy: chosenMail.sentBy,
     });
+    navigate(`/student/notification/${chosenMail.id}`);
   };
 
   return (
     <div>
       <Student_NavBar />
-      <Tab.Container id="left" defaultActiveKey="1">
+      <Tab.Container id="left" defaultActiveKey={defaultTabKey}>
         <Row>
           <Col sm={3}>
             <Nav variant="pills" className="flex-column">
-              {mail.map((value, index) => {
+              {mails.map((value, index) => {
                 return (
                   <Nav.Item key={index} className="mail-item">
                     <Nav.Link eventKey={index} onClick={handleMailClick}>

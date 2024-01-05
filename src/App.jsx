@@ -32,9 +32,9 @@ function App() {
         path="student/class-detail/:id"
         element={<Student_ClassDetail />}
       />
-      <Route path="/student/notification" element={<Student_Notification />} />
+      {/* <Route path="/student/notification" element={<Student_Notification />} /> */}
       <Route
-        path="/student/notification/:id"
+        path="/student/notification/:ID"
         element={<Student_Notification />}
       />
 
