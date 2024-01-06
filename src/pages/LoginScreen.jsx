@@ -25,36 +25,64 @@ function LoginScreen() {
     localStorage.getItem(localStorage.getItem("authenticated") || false)
   );
 
-  const LoginHandle = (event) => {
+  const LoginHandle = async (event) => {
     event.preventDefault();
     const userAccount = {
       createdAt: "",
       email: email,
-      hash: password,
+      password: password,
       hashRT: "",
     };
     const URL =
-      "https://advancedweb-finalproject-be.onrender.com/auth/local/signin";
-    fetch(URL, {
-      method: "POST",
-      headers: {
-        Accept: "application/json; charset=utf-8",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify(userAccount),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          localStorage.setItem("authenticated", true);
-          localStorage.setItem("email", email);
-          navigate("/home");
-        } else {
-          setEmail("");
-          setPassword("");
-          console.error("Wrong Password or Email!");
-        }
+      "https://advancedweb-finalproject-educat-be.onrender.com/auth/signin";
+
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          Accept: "application/json; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(userAccount),
       });
+
+      const data = await response.json();
+
+      if (data) {
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
+        await getAccountType(localStorage.getItem("access_token"));
+
+        console.log(localStorage.getItem("type"));
+
+        navigate("/home");
+      } else {
+        setEmail("");
+        setPassword("");
+        console.error("Wrong Password or Email!");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
+  const getAccountType = async (access_token) => {
+    console.log(access_token);
+    const url =
+      "https://advancedweb-finalproject-educat-be.onrender.com/auth/profileUser";
+
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${access_token}` },
+      });
+
+      const data = await response.json();
+      localStorage.setItem("type", data.Type);
+      return data.Type;
+    } catch (error) {
+      console.error("Error getting account type:", error);
+      return null;
+    }
   };
 
   const handleGoogleLogin = (response) => {

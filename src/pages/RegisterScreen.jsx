@@ -19,6 +19,8 @@ function RegisterScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+
   const RegisterHandle = (event) => {
     const URL =
       "https://advancedweb-finalproject-be.onrender.com/auth/local/signup";
@@ -26,6 +28,7 @@ function RegisterScreen() {
     const userAccount = {
       email: email,
       hash: password,
+      Type: role,
     };
     fetch(URL, {
       method: "POST",
@@ -90,20 +93,25 @@ function RegisterScreen() {
             />
           </InputGroup>
 
-          <div key={`inline-radio`} className="mb-3">
+          <div
+            key={`inline-radio`}
+            className="mb-3 d-flex justify-content-between "
+          >
             <Form.Check
               inline
               label="Student"
               name="group1"
-              type={type}
+              type="radio"
               id={`inline-radio-1`}
+              value="student"
             />
             <Form.Check
               inline
               label="Teacher"
               name="group1"
-              type={type}
+              type="radio"
               id={`inline-radio-2`}
+              value="teacher"
             />
           </div>
 

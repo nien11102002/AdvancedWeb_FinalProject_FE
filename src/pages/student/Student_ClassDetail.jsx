@@ -166,17 +166,36 @@ export default function Student_ClassDetail({ id }) {
                             <th></th>
                             <th>Grade Name</th>
                             <th>Grade Percentage</th>
+                            <th>Grade</th>
                           </tr>
                         </thead>
                         <tbody>
                           {grades.map((grade, index) => (
-                            <DragAndDropRow
-                              key={index}
-                              index={index}
-                              name={grade.name}
-                              percentage={grade.percentage}
-                              readMode={true}
-                            />
+                            <tr>
+                              <td style={{ verticalAlign: "middle" }}>
+                                {index + 1}
+                              </td>
+                              <td>
+                                <Form.Control
+                                  type="text"
+                                  value={grade.name}
+                                  readOnly={true}
+                                />
+                              </td>
+                              <td className="d-flex justify-content-center align-items-center">
+                                <Form.Control
+                                  type="number"
+                                  value={grade.percentage}
+                                  readOnly={true}
+                                  style={{
+                                    marginRight: "10px",
+                                    width: "100px",
+                                  }}
+                                />
+                                <span>%</span>
+                              </td>
+                              <td></td>
+                            </tr>
                           ))}
                         </tbody>
                       </Table>

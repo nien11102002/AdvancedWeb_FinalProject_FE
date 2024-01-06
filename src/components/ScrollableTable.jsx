@@ -35,7 +35,7 @@ export default function AdminUserTable({ items, disabled }) {
               <td>{row.email}</td>
               <td>{row.role}</td>
               <td>{row.status}</td>
-              <td>{row.id}</td>
+              <td>{row.studentID}</td>
             </tr>
           ))}
         </tbody>
