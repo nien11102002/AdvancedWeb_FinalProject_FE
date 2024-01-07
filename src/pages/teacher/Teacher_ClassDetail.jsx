@@ -1,70 +1,73 @@
 import React, { useEffect, useState } from "react";
 import Student_NavBar from "../../components/Student_NavBar";
 import "../../styles/Admin_ClassDetail.css";
+import "../../styles/Teacher_ClassDetail.css";
 import { Table, Row, Col, Nav, Tab, Form, Button } from "react-bootstrap";
 import ScrollableTable from "../../components/ScrollableTable";
 import { DndProvider } from "react-dnd";
 import DragAndDropRow from "../../components/DragAndDropRow";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CSVLink } from "react-csv";
-import CSVReader from "react-csv-reader";
-import { FormGroup } from "react-bootstrap/esm";
-
-// const CsvUploader = ({ onCsvUpload }) => {
-//   const handleCsvUpload = (data) => {
-//     const header = data[0].data;
-//     const studentIdIndex = header.indexOf("studentID");
-//     const fullNameIndex = header.indexOf("fullName");
-
-//     if (studentIdIndex !== -1 && fullNameIndex !== -1) {
-//       const newStudents = data.slice(1).map((row) => ({
-//         fullName: row.data[fullNameIndex],
-//         studentID: row.data[studentIdIndex],
-//       }));
-
-//       if (onCsvUpload && typeof onCsvUpload === "function") {
-//         onCsvUpload(newStudents);
-//       }
-//     } else {
-//       console.error("CSV file must contain headers: studentID, fullName");
-//     }
-//   };
-
-//   const buttonRef = React.createRef();
-
-//   const handleOpenDialog = (e) => {
-//     if (buttonRef.current) {
-//       buttonRef.current.open(e);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <CSVReader
-//         onFileLoaded={handleCsvUpload}
-//         onError={(error) => console.error("CSV Load Error:", error)}
-//         noClick
-//         noDrag
-//       >
-//         {({ file }) => (
-//           <Button onClick={() => handleOpenDialog(file)}>
-//             Upload Student List
-//           </Button>
-//         )}
-//       </CSVReader>
-//     </>
-//   );
-// };
 
 const ExportCsvFile = ({ list }) => {
   const students = list.filter((user) => user.role === "student");
 
-  const headers = ["StudentID", "Full Name"];
+  const headers = ["studentID", "fullName"];
   const data = students.map((student) => [student.studentID, student.fullName]);
 
   return (
     <CSVLink data={data} headers={headers} filename="student_list.csv">
       <Button>Export Student list</Button>
+    </CSVLink>
+  );
+};
+
+const ExportCsvGradeBoard = ({ gradeBoard, totalGradeLogic, emails }) => {
+  var headers, data;
+  if (gradeBoard) {
+    const gradesHeader =
+      gradeBoard[0]?.gradeList?.map(
+        (value) => `${value.name} (${value.percentage}%)`
+      ) || [];
+    headers = [
+      "studentID",
+      "studentAccount",
+      "fullName",
+      ...gradesHeader,
+      "Total",
+    ];
+    const gradesData = gradeBoard.map(
+      (value) => value.gradeList?.map((grade) => grade.point) || []
+    );
+    data = gradeBoard.map((value, index) => [
+      value.studentID,
+      emails[value.studentID] || "",
+      value.fullName,
+      ...(gradesData[index] || []),
+      totalGradeLogic(value),
+    ]);
+  }
+
+  return (
+    <CSVLink data={data} headers={headers} filename="grade_board.csv">
+      <Button>Export Grade Board</Button>
+    </CSVLink>
+  );
+};
+
+const DownloadTemplate = ({ grades, students }) => {
+  const headers = [
+    "studentID",
+    ...grades.map((value) => `${value.name} (${value.percentage}%)`),
+  ];
+  const data = students.map((student) => [
+    student.studentID,
+    ...grades.map(() => ""),
+  ]);
+
+  return (
+    <CSVLink data={data} headers={headers} filename="template.csv">
+      <Button>Download Template</Button>
     </CSVLink>
   );
 };
@@ -87,7 +90,7 @@ export default function Teacher_ClassDetail({ id }) {
       fullName: "Nguyen Duy Nien",
       role: "teacher",
       status: "active",
-      email: "ndnien@gmail.com",
+      email: "ndnien1@gmail.com",
       studentID: "20127060",
     },
     {
@@ -96,7 +99,7 @@ export default function Teacher_ClassDetail({ id }) {
       fullName: "Nguyen Duy ",
       role: "student",
       status: "active",
-      email: "ndnien@gmail.com",
+      email: "ndnien2@gmail.com",
       studentID: "20127061",
     },
     {
@@ -105,7 +108,7 @@ export default function Teacher_ClassDetail({ id }) {
       fullName: "Nguyen  Nien",
       role: "student",
       status: "active",
-      email: "ndnien@gmail.com",
+      email: "ndnien3@gmail.com",
       studentID: "20127062",
     },
     {
@@ -114,7 +117,7 @@ export default function Teacher_ClassDetail({ id }) {
       fullName: " Duy Nien",
       role: "student",
       status: "active",
-      email: "ndnien@gmail.com",
+      email: "ndnien4@gmail.com",
       studentID: "20127063",
     },
   ];
@@ -146,12 +149,21 @@ export default function Teacher_ClassDetail({ id }) {
     }));
   });
   const [isChanged, setIsChanged] = useState(false);
+  const [totalGrades, setTotalGrades] = useState(() => {
+    const initialTotalGrades = gradeBoard.map((row) => totalGradeLogic(row));
+    return initialTotalGrades;
+  });
+  const [studentMapping, setStudentMapping] = useState([]);
+  const [emails, setEmails] = useState([]);
+  const [selectedEmails, setSelectedEmails] = useState(
+    Array(user_list.length).fill("")
+  );
 
-  const fileInputRef = React.useRef();
+  const studentListFileInputRef = React.useRef();
+  const gradesFileInputRef = React.useRef();
 
   useEffect(() => {
     if (activeTab === "fourth" && !isChanged) {
-      console.log(gradeBoard);
       const newGradeBoard = uploadedStudentList.map((student) => ({
         studentID: student.studentID,
         fullName: student.fullName,
@@ -169,6 +181,11 @@ export default function Teacher_ClassDetail({ id }) {
   useEffect(() => {
     setInitialGrades(grade_list);
     setGrades(grade_list);
+
+    const newEmails = user_list
+      .filter((value) => value.role === "student")
+      .map((value) => value.email);
+    setEmails(newEmails);
   }, []);
 
   const handleAddRow = () => {
@@ -208,7 +225,7 @@ export default function Teacher_ClassDetail({ id }) {
     setEditable(!editable);
   };
 
-  const handleFileInputChange = (event) => {
+  const handleUploadStudentList = (event) => {
     const selectedFile = event.target.files[0];
 
     if (selectedFile && selectedFile.type === "text/csv") {
@@ -242,27 +259,122 @@ export default function Teacher_ClassDetail({ id }) {
     }
   };
 
+  const handleUploadGrades = (event) => {
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile && selectedFile.type === "text/csv") {
+      if (gradeBoard) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const csvData = e.target.result;
+
+          const rows = csvData.split(/\r?\n/).map((row) => row.trim());
+          rows.pop();
+          const header = rows[0].split(",");
+          const studentIdIndex = header.indexOf("studentID");
+          console.log(rows);
+          const gradeIndices = grades.map((grade) =>
+            header.indexOf(`${grade.name} (${grade.percentage}%)`)
+          );
+
+          if (
+            studentIdIndex !== -1 &&
+            gradeIndices.every((index) => index !== -1)
+          ) {
+            const newGrades = rows.slice(1).map((row) => {
+              const columns = row.split(",");
+              const studentID = columns[studentIdIndex];
+              const uploadedStudent = uploadedStudentList.find(
+                (student) => student.studentID === studentID
+              );
+
+              if (uploadedStudent) {
+                const fullName = uploadedStudent.fullName;
+                const gradeList = gradeIndices.map((index) => ({
+                  point: index !== -1 ? parseFloat(columns[index]) || 0 : 0,
+                  percentage: grades[index]?.percentage || 0,
+                }));
+                var total = 0;
+                gradeList.forEach((value) => {
+                  total += value.point * (value.percentage / 100);
+                });
+                total = Math.round(total * 10) / 10;
+
+                return {
+                  studentID,
+                  fullName,
+                  gradeList,
+                  total,
+                };
+              } else {
+                return {
+                  studentID,
+                  fullName: "",
+                  gradeList: [],
+                  total: 0,
+                };
+              }
+            });
+
+            setGradeBoard(newGrades);
+
+            const updatedTotalGrades = newGrades.map((row) => row.total);
+            setTotalGrades(updatedTotalGrades);
+          } else {
+            alert(
+              "CSV file must contain headers: studentID and grade columns from the template"
+            );
+          }
+        };
+
+        reader.readAsText(selectedFile);
+      } else {
+        alert("Upload Student List First");
+      }
+    } else {
+      alert("Please select a valid CSV file.");
+    }
+  };
+
   const handleGradeInputChange = (studentIndex, gradeIndex, value) => {
     const updatedGradeBoard = [...gradeBoard];
-    updatedGradeBoard[studentIndex].gradeList[gradeIndex].point = parseInt(
+    updatedGradeBoard[studentIndex].gradeList[gradeIndex].point = parseFloat(
       value,
       10
     );
     setGradeBoard(updatedGradeBoard);
     setIsChanged(true);
+    const updatedTotalGrades = updatedGradeBoard.map((row) =>
+      totalGradeLogic(row)
+    );
+    setTotalGrades(updatedTotalGrades);
   };
 
   const totalGradeLogic = (row) => {
-    const gradeList = row.gradeList;
+    const gradeList = row.gradeList || [];
     var result = 0;
-    gradeList.map(
-      (value, index) => (result += (value.point * value.percentage) / 100)
-    );
 
-    return result;
+    gradeList.forEach((value) => {
+      const point = value?.point || 0;
+      result += point * ((value?.percentage || 0) / 100);
+    });
+
+    return Math.round(result * 10) / 10;
   };
 
   const handleFinalize = () => {};
+
+  const handleEmailChange = (selectedEmail, studentIndex) => {
+    const newStudentMapping = { ...studentMapping };
+    newStudentMapping[gradeBoard[studentIndex].studentID] = selectedEmail;
+    setStudentMapping(newStudentMapping);
+
+    const newSelectedEmails = Object.values(newStudentMapping);
+    setSelectedEmails(newSelectedEmails);
+    console.log(studentMapping);
+  };
+
+  const handleSaveGradeBoard = () => {};
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -301,6 +413,7 @@ export default function Teacher_ClassDetail({ id }) {
                   </Nav.Item>
                 </Nav>
               </Col>
+
               <Col sm={9}>
                 <Tab.Content>
                   <Tab.Pane eventKey="first">
@@ -427,17 +540,43 @@ export default function Teacher_ClassDetail({ id }) {
                             type="file"
                             accept=".csv"
                             style={{ display: "none" }}
-                            onChange={(e) => handleFileInputChange(e)}
-                            ref={fileInputRef}
+                            onChange={(e) => handleUploadStudentList(e)}
+                            ref={studentListFileInputRef}
                           />
                           <Button
                             variant="primary"
-                            onClick={() => fileInputRef.current.click()}
+                            onClick={() =>
+                              studentListFileInputRef.current.click()
+                            }
                           >
-                            Choose CSV File
+                            Upload Student List
                           </Button>
                         </div>
                         <ExportCsvFile list={user_list} />
+                        <ExportCsvGradeBoard
+                          gradeBoard={gradeBoard}
+                          totalGradeLogic={totalGradeLogic}
+                          emails={studentMapping}
+                        />
+                        <DownloadTemplate
+                          grades={grades}
+                          students={uploadedStudentList}
+                        />
+                        <div>
+                          <input
+                            type="file"
+                            accept=".csv"
+                            style={{ display: "none" }}
+                            onChange={(e) => handleUploadGrades(e)}
+                            ref={gradesFileInputRef}
+                          />
+                          <Button
+                            variant="primary"
+                            onClick={() => gradesFileInputRef.current.click()}
+                          >
+                            Upload Grades
+                          </Button>
+                        </div>
                       </>
                     ) : (
                       <></>
@@ -447,6 +586,7 @@ export default function Teacher_ClassDetail({ id }) {
                         <tr>
                           <th></th>
                           <th>Student ID</th>
+                          <th>Student Account</th>
                           <th>Full Name</th>
                           {grades.map((value, index) => (
                             <th key={index}>
@@ -470,6 +610,31 @@ export default function Teacher_ClassDetail({ id }) {
                           <tr key={studentIndex}>
                             <th>{studentIndex + 1}</th>
                             <th>{value.studentID}</th>
+                            <th>
+                              <Form.Select
+                                value={
+                                  studentMapping[
+                                    gradeBoard[studentIndex].studentID
+                                  ] || ""
+                                }
+                                onChange={(e) =>
+                                  handleEmailChange(
+                                    e.target.value,
+                                    studentIndex
+                                  )
+                                }
+                              >
+                                <option>Empty</option>
+                                {emails.map((value, index) => {
+                                  return (
+                                    <option value={value} key={index}>
+                                      {value}
+                                    </option>
+                                  );
+                                })}
+                              </Form.Select>
+                            </th>
+
                             <th>{value.fullName}</th>
                             {grades.map((grade, gradeIndex) => (
                               <th key={gradeIndex}>
@@ -490,11 +655,14 @@ export default function Teacher_ClassDetail({ id }) {
                                 />
                               </th>
                             ))}
-                            <th>{value.total}</th>
+                            <th>{totalGrades[studentIndex]}</th>
                           </tr>
                         ))}
                       </tbody>
                     </Table>
+                    <Button variant="primary" onClick={handleSaveGradeBoard}>
+                      Save
+                    </Button>
                   </Tab.Pane>
                 </Tab.Content>
               </Col>
