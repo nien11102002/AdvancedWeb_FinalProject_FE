@@ -59,7 +59,7 @@ function LoginScreen() {
           if (user.Type == "student") {
             path = "/student";
             navigate(path);
-          } else if (user.type == "teacher") {
+          } else if (user.Type == "teacher") {
             path = "/teacher";
             navigate(path);
           } else navigate("/admin/user-management");
