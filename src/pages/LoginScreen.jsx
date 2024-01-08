@@ -62,7 +62,7 @@ function LoginScreen() {
           } else if (user.type == "teacher") {
             path = "/teacher";
             navigate(path);
-          } else navigate();
+          } else navigate("/admin/user-management");
         }
       } else {
         setEmail("");
