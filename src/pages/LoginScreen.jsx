@@ -75,6 +75,8 @@ function LoginScreen() {
   };
 
   const handleGoogleLogin = (response) => {
+    const accessToken = response?.credential?.accessToken;
+    console.log("accessToken: ", accessToken);
     console.log("Google login success:", response);
   };
 
