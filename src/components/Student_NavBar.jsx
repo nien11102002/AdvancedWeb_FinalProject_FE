@@ -58,7 +58,7 @@ export default function Student_NavBar({ hasNewNotification }) {
 
   const handleLogout = () => {
     localStorage.clear();
-
+    sessionStorage.clear();
     navigate("/");
   };
 

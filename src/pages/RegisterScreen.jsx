@@ -15,14 +15,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import Brand from "../components/Brand";
 import { getProfile } from "../service/userService";
+import { useAuth } from "../hooks/useAuth";
 
 function RegisterScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const { dispatch } = useAuth();
 
-  const RegisterHandle = (event) => {
+  const RegisterHandle = async (event) => {
     const URL =
       "https://advancedweb-finalproject-be.onrender.com/auth/local/signup";
     event.preventDefault();
@@ -33,35 +35,45 @@ function RegisterScreen() {
     };
 
     console.log(userAccount);
-    fetch(URL, {
-      method: "POST",
-      headers: {
-        Accept: "application/json; charset=utf-8",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-      body: JSON.stringify(userAccount),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          localStorage.setItem("ACCESS_TOKEN", data.access_token);
-          const user = getProfile();
-          if (user.Type == "student") {
-            path = "/student";
-            navigate(path);
-          } else if (user.Type == "teacher") {
-            path = "/teacher";
-            navigate(path);
-          } else navigate();
-
-          navigate("/");
-        } else {
-          setEmail("");
-          setPassword("");
-          console.error("Email has already existed!");
-        }
+    try {
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          Accept: "application/json; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(userAccount),
       });
+
+      const data = await response.json();
+
+      if (data) {
+        localStorage.setItem("ACCESS_TOKEN", data.access_token);
+
+        const user = await getProfile();
+        dispatch(signIn({ user }));
+
+        let path;
+
+        if (user.Type === "student") {
+          path = "/student";
+        } else if (user.Type === "teacher") {
+          path = "/teacher";
+        } else {
+          path = "/";
+        }
+
+        navigate(path);
+      } else {
+        setEmail("");
+        setPassword("");
+        console.error("Email has already existed!");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
+
   return (
     <div className="">
       <Navbar collapseOnSelect className="myNav">
