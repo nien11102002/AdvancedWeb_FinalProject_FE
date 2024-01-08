@@ -14,6 +14,7 @@ import "../styles/RegisterScreen.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import Brand from "../components/Brand";
+import { getProfile } from "../service/userService";
 
 function RegisterScreen() {
   const navigate = useNavigate();
@@ -27,9 +28,11 @@ function RegisterScreen() {
     event.preventDefault();
     const userAccount = {
       email: email,
-      hash: password,
+      password: password,
       Type: role,
     };
+
+    console.log(userAccount);
     fetch(URL, {
       method: "POST",
       headers: {
@@ -41,8 +44,16 @@ function RegisterScreen() {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          localStorage.setItem("authenticated", true);
-          localStorage.setItem("email", email);
+          localStorage.setItem("ACCESS_TOKEN", data.access_token);
+          const user = getProfile();
+          if (user.Type == "student") {
+            path = "/student";
+            navigate(path);
+          } else if (user.Type == "teacher") {
+            path = "/teacher";
+            navigate(path);
+          } else navigate();
+
           navigate("/");
         } else {
           setEmail("");
@@ -104,6 +115,8 @@ function RegisterScreen() {
               type="radio"
               id={`inline-radio-1`}
               value="student"
+              checked={role === "student"}
+              onChange={() => setRole("student")}
             />
             <Form.Check
               inline
@@ -112,6 +125,8 @@ function RegisterScreen() {
               type="radio"
               id={`inline-radio-2`}
               value="teacher"
+              checked={role === "teacher"}
+              onChange={() => setRole("teacher")}
             />
           </div>
 

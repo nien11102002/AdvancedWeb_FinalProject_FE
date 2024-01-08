@@ -1,6 +1,6 @@
 const AuthState = {
-  isAuthenticated: undefined,
-  isInitialized: undefined,
+  isAuthenticated: false,
+  isInitialized: false,
   user: null,
 };
 
