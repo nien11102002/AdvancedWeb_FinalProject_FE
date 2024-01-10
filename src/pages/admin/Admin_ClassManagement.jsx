@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import axios from "axios";
 
 export default function Admin_ClassManagement({ disabled }) {
   const navigate = useNavigate();
@@ -27,26 +28,36 @@ export default function Admin_ClassManagement({ disabled }) {
   const [clickCount, setClickCount] = useState(0);
   const [isFilter, setIsFilter] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    console.log(data);
-    console.log(filteredData);
-    console.log(items);
-  }, []);
+  const fetchData = async () => {
+    const URL =
+      "https://advancedweb-finalproject-educat-be.onrender.com/classes";
+    try {
+      const response = await fetch(URL);
 
-  const fetchData = () => {
-    setData([...items]);
-    setFilteredData(items);
+      const data = await response.json();
+      console.log(data);
+
+      if (data) {
+        setData(data);
+        setFilteredData(data);
+      } else {
+        setData([]);
+        setFilteredData([]);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
   };
 
   useEffect(() => {
-    console.log("Data:", data);
-    console.log("Filtered Data:", filteredData);
-  }, [data, filteredData]);
+    fetchData();
+    // console.log("Data:", data);
+    // console.log("Filtered Data:", filteredData);
+  }, []);
 
   const ItemClickHandle = (index) => {
     if (disabled) return;
-    const path = `/admin/class-detail/${data[index].classID}`;
+    const path = `/admin/class-detail/${data[index].class_id}`;
     navigate(path);
   };
 
@@ -77,29 +88,29 @@ export default function Admin_ClassManagement({ disabled }) {
     let filteredItems = [...data];
     console.log(filteredItems);
 
-    if (filterCreatedBy) {
-      filteredItems = filteredItems.filter((item) =>
-        item.createdBy.toLowerCase().includes(filterCreatedBy.toLowerCase())
-      );
-    }
+    // if (filterCreatedBy) {
+    //   filteredItems = filteredItems.filter((item) =>
+    //     item.createdBy.toLowerCase().includes(filterCreatedBy.toLowerCase())
+    //   );
+    // }
 
-    if (filterID) {
-      filteredItems = filteredItems.filter((item) =>
-        item.classID.toLowerCase().includes(filterID.toLowerCase())
-      );
-    }
-
-    if (filterMinParticipants !== "") {
+    if (filterID !== "") {
       filteredItems = filteredItems.filter(
-        (item) => item.participants >= parseInt(filterMinParticipants, 10)
+        (item) => item.class_id === parseInt(filterID, 10)
       );
     }
 
-    if (filterMaxParticipants !== "") {
-      filteredItems = filteredItems.filter(
-        (item) => item.participants <= parseInt(filterMaxParticipants, 10)
-      );
-    }
+    // if (filterMinParticipants !== "") {
+    //   filteredItems = filteredItems.filter(
+    //     (item) => item.participants >= parseInt(filterMinParticipants, 10)
+    //   );
+    // }
+
+    // if (filterMaxParticipants !== "") {
+    //   filteredItems = filteredItems.filter(
+    //     (item) => item.participants <= parseInt(filterMaxParticipants, 10)
+    //   );
+    // }
 
     if (filterStatus !== "all") {
       filteredItems = filteredItems.filter(
@@ -121,51 +132,6 @@ export default function Admin_ClassManagement({ disabled }) {
     setFilteredData(data);
     console.log(filteredData);
   };
-
-  const items = [
-    {
-      classID: "01",
-      className: "Data Structure and Algorithms",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 40,
-      status: "active",
-    },
-    {
-      classID: "02",
-      className: "A",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 45,
-      status: "deactive",
-    },
-    {
-      classID: "03",
-      className: "N",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 30,
-      status: "active",
-    },
-    {
-      classID: "04",
-      className: "C",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 20,
-      status: "active",
-    },
-    {
-      classID: "05",
-      className: "B",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 50,
-      status: "active",
-    },
-    {
-      classID: "06",
-      className: "W",
-      createdBy: "Nguyễn Duy Niên",
-      participants: 35,
-      status: "deactive",
-    },
-  ];
 
   return (
     <div>
@@ -201,7 +167,8 @@ export default function Admin_ClassManagement({ disabled }) {
                 onChange={(event) => setFilterID(event.target.value)}
               />
             </Form.Group>
-            <Form.Group className="d-flex align-items-center">
+
+            {/* <Form.Group className="d-flex align-items-center">
               <Form.Label className="filter-label align-middle ">
                 Created by
               </Form.Label>
@@ -211,9 +178,9 @@ export default function Admin_ClassManagement({ disabled }) {
                 value={filterCreatedBy}
                 onChange={(event) => setFilterCreatedBy(event.target.value)}
               />
-            </Form.Group>
+            </Form.Group> */}
 
-            <Form.Group className="d-flex align-items-center">
+            {/* <Form.Group className="d-flex align-items-center">
               <Form.Label className="filter-label align-middle ">
                 Participants
               </Form.Label>
@@ -235,7 +202,8 @@ export default function Admin_ClassManagement({ disabled }) {
                   setFilterMaxParticipants(event.target.value)
                 }
               />
-            </Form.Group>
+            </Form.Group> */}
+
             <Form.Group className="d-flex align-items-center">
               <Form.Label className="filter-label align-middle ">
                 Status
@@ -270,24 +238,19 @@ export default function Admin_ClassManagement({ disabled }) {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th onClick={() => handleSort("className")}>
+                <th onClick={() => handleSort("class_name")}>
                   Class Name{" "}
-                  {sortBy === "className" && sortOrder === "asc" && "▲"}
-                  {sortBy === "className" && sortOrder === "desc" && "▼"}
+                  {sortBy === "class_name" && sortOrder === "asc" && "▲"}
+                  {sortBy === "class_name" && sortOrder === "desc" && "▼"}
                 </th>
-                <th onClick={() => handleSort("classID")}>
-                  Class ID {sortBy === "classID" && sortOrder === "asc" && "▲"}
-                  {sortBy === "classID" && sortOrder === "desc" && "▼"}
+                <th onClick={() => handleSort("class_id")}>
+                  Class ID {sortBy === "class_id" && sortOrder === "asc" && "▲"}
+                  {sortBy === "class_id" && sortOrder === "desc" && "▼"}
                 </th>
-                <th onClick={() => handleSort("createdBy")}>
-                  Created by{" "}
-                  {sortBy === "createdBy" && sortOrder === "asc" && "▲"}
-                  {sortBy === "createdBy" && sortOrder === "desc" && "▼"}
-                </th>
-                <th onClick={() => handleSort("participants")}>
-                  Participants{" "}
-                  {sortBy === "participants" && sortOrder === "asc" && "▲"}
-                  {sortBy === "participants" && sortOrder === "desc" && "▼"}
+                <th onClick={() => handleSort("invite_code")}>
+                  Class Code{" "}
+                  {sortBy === "invite_code" && sortOrder === "asc" && "▲"}
+                  {sortBy === "invite_code" && sortOrder === "desc" && "▼"}
                 </th>
                 <th>Status</th>
               </tr>
@@ -295,10 +258,9 @@ export default function Admin_ClassManagement({ disabled }) {
             <tbody>
               {filteredData.map((row, index) => (
                 <tr key={index} onClick={() => ItemClickHandle(index)}>
-                  <td>{row.className}</td>
-                  <td>{row.classID}</td>
-                  <td>{row.createdBy}</td>
-                  <td>{row.participants}</td>
+                  <td>{row.class_name}</td>
+                  <td>{row.class_id}</td>
+                  <td>{row.invite_code}</td>
                   <td>{row.status}</td>
                 </tr>
               ))}

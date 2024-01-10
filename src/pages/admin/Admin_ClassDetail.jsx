@@ -1,17 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Admin_NavBar from "../../components/Admin_NavBar";
 import { Container, Row, Col, Nav, Button, Form, Tab } from "react-bootstrap";
 import "../../styles/Admin_ClassDetail.css";
 import ScrollableTable from "../../components/ScrollableTable";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function Admin_ClassDetail() {
-  const course = {
-    className: "Data Structure and Algorithms",
-    createdBy: "Nguyen Duy Nien",
-    participants: 40,
-    status: "deactive",
-  };
-
   const user_list = [
     {
       id: "01",
@@ -47,17 +42,90 @@ export default function Admin_ClassDetail() {
     },
   ];
 
+  const description_row = 8;
+
+  const [course, setCourse] = useState({});
   const [isEditMode, setEditMode] = useState(false);
-  const [teacherName, setTeacherName] = useState(course.createdBy);
-  const [className, setClassName] = useState(course.className);
-  const [participants, setParticipants] = useState(course.participants);
-  const [status, setStatus] = useState(course.status);
+  const [className, setClassName] = useState();
+  const [status, setStatus] = useState();
+  const [description, setDescription] = useState();
+  const [inviteCode, setInviteCode] = useState();
+
+  const { class_id } = useParams();
+
+  const fetchData = async () => {
+    const URL = `
+    https://advancedweb-finalproject-educat-be.onrender.com/classes/${class_id}`;
+
+    try {
+      const response = await fetch(URL);
+
+      const data = await response.json();
+      if (data) {
+        setCourse(data);
+        setClassName(data.class_name);
+        setStatus(data.status);
+        setDescription(data.description);
+        setInviteCode(data.invite_code);
+      } else {
+        setCourse([]);
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+
+  function getCurrentTimestamp() {
+    const now = new Date();
+
+    const year = now.getUTCFullYear();
+    const month = (now.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = now.getUTCDate().toString().padStart(2, "0");
+    const hours = now.getUTCHours().toString().padStart(2, "0");
+    const minutes = now.getUTCMinutes().toString().padStart(2, "0");
+    const seconds = now.getUTCSeconds().toString().padStart(2, "0");
+    const milliseconds = now.getUTCMilliseconds().toString().padStart(3, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleEditClick = () => {
     setEditMode(!isEditMode);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (isEditMode) {
+      const updatedTime = getCurrentTimestamp();
+
+      const updatedCourse = {
+        class_name: className,
+        class_id: course.class_id,
+        created_at: course.created_at,
+        updated_at: updatedTime,
+        invite_code: inviteCode,
+        invite_link: course.invite_link,
+        status: status,
+        description: description,
+      };
+      console.log(updatedCourse);
+
+      const URL = `https://advancedweb-finalproject-educat-be.onrender.com/classes/${course.class_id}`;
+      try {
+        const response = await axios.patch(URL, updatedCourse);
+
+        const data = response.data;
+        console.log(data);
+        fetchData();
+      } catch (error) {
+        console.error("Error during edit class:", error);
+      }
+    }
+  };
 
   return (
     <div>
@@ -83,12 +151,13 @@ export default function Admin_ClassDetail() {
             <Col sm={9}>
               <Tab.Content>
                 <Tab.Pane eventKey="first">
-                  <Form onSubmit={handleSubmit}>
+                  <Form onSubmit={(event) => handleSubmit(event)}>
                     <Form.Group>
                       <Form.Label className="class-label">
                         Class Name
                       </Form.Label>
                       <Form.Control
+                        className="class-input"
                         type="text"
                         value={className}
                         onChange={(event) => setClassName(event.target.value)}
@@ -97,28 +166,30 @@ export default function Admin_ClassDetail() {
                     </Form.Group>
                     <Form.Group>
                       <Form.Label className="class-label">
-                        Main teacher
+                        Invite Code
                       </Form.Label>
                       <Form.Control
+                        className="class-input"
                         type="text"
-                        value={teacherName}
-                        onChange={(event) => setTeacherName(event.target.value)}
+                        value={inviteCode}
+                        onChange={(event) => setInviteCode(event.target.value)}
                         readOnly={!isEditMode}
                       />
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label className="class-label">
-                        Participants
+                        Description
                       </Form.Label>
                       <Form.Control
-                        type="number"
-                        value={participants}
-                        onChange={(event) =>
-                          setParticipants(event.target.value)
-                        }
-                        readOnly={!isEditMode}
-                      />
+                        as="textarea"
+                        rows={description_row}
+                        value={description}
+                        onChange={(event) => setDescription(event.target.value)}
+                        disabled={!isEditMode}
+                      ></Form.Control>
                     </Form.Group>
+
                     <Form.Group>
                       <Form.Label className="class-label">Status</Form.Label>
                       <Form.Select
@@ -130,8 +201,11 @@ export default function Admin_ClassDetail() {
                         <option value="deactive">Deactive</option>
                       </Form.Select>
                     </Form.Group>
+
                     {isEditMode ? (
-                      <Button onClick={handleEditClick}>Save</Button>
+                      <Button type="submit" onClick={handleEditClick}>
+                        Save
+                      </Button>
                     ) : (
                       <Button type="submit" onClick={handleEditClick}>
                         Edit

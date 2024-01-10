@@ -4,6 +4,8 @@ import Brand from "./Brand";
 import avatar from "../assets/Logo.svg";
 import "../styles/StudentHomePage.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../context/auth/reducers";
 
 const NotificationItem = ({ notification, index, onClick }) => {
   return (
@@ -49,6 +51,7 @@ export default function Student_NavBar({ hasNewNotification }) {
     },
   ];
   const navigate = useNavigate();
+  const { dispatch } = useAuth();
 
   const navigateDetailNotification = (index) => {
     const notificationID = notifications[index].id;
@@ -59,6 +62,7 @@ export default function Student_NavBar({ hasNewNotification }) {
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
+    dispatch(signOut());
     navigate("/");
   };
 

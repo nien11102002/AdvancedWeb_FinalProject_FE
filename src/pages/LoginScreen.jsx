@@ -18,8 +18,10 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { getProfile } from "../service/userService";
 import { useAuth } from "../hooks/useAuth";
 import { signIn } from "../context/auth/reducers";
+import { gapi } from "gapi-script";
 
 function LoginScreen() {
+  const CLIENT_ID = process.env.CLIENT_ID;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +47,7 @@ function LoginScreen() {
       });
 
       const data = await response.json();
+      console.log(data);
       if (data) {
         var path;
         localStorage.setItem("ACCESS_TOKEN", data.access_token);
@@ -76,6 +79,14 @@ function LoginScreen() {
 
   const handleGoogleLogin = (response) => {
     const accessToken = response?.credential?.accessToken;
+    function start() {
+      gapi.client.init({
+        clientID: CLIENT_ID,
+        scope: "",
+      });
+    }
+
+    gapi.load("client:auth2", start);
     console.log("accessToken: ", accessToken);
     console.log("Google login success:", response);
   };
@@ -139,7 +150,7 @@ function LoginScreen() {
           <Button variant="link">
             <Image className="logo" src={facebook_logo} alt="Facebook Login" />
           </Button>
-          <GoogleOAuthProvider clientId="576434745134-fdqkbfv966uls3idvloppqei9mn2p3s2.apps.googleusercontent.com">
+          <GoogleOAuthProvider clientId={CLIENT_ID}>
             <GoogleLogin
               onSuccess={handleGoogleLogin}
               onError={handleGoogleLoginError}

@@ -8,6 +8,7 @@ import { DndProvider } from "react-dnd";
 import DragAndDropRow from "../../components/DragAndDropRow";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CSVLink } from "react-csv";
+import { useParams } from "react-router-dom";
 
 const ExportCsvFile = ({ list }) => {
   const students = list.filter((user) => user.role === "student");
@@ -128,9 +129,10 @@ export default function Teacher_ClassDetail({ id }) {
     { name: "C", percentage: 10 },
   ];
 
-  const classOwner = class_detail.createdBy;
+  const classOwner = classDetail.createdBy;
   const user = "Nguyen Duy Nien";
 
+  const [classDetail, setClassDetail] = useState({});
   const [initialGrades, setInitialGrades] = useState([]);
   const [grades, setGrades] = useState([{ name: "", percentage: 0 }]);
   const [editable, setEditable] = useState(false);
@@ -161,6 +163,29 @@ export default function Teacher_ClassDetail({ id }) {
 
   const studentListFileInputRef = React.useRef();
   const gradesFileInputRef = React.useRef();
+
+  const { class_id } = useParams();
+
+  const fetchClassGeneralData = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/classes/${class_id}`;
+    try {
+      const response = await axios.get(URL);
+
+      const data = response.data;
+
+      if (data) {
+        let path;
+
+        navigate(path);
+      } else {
+        setEmail("");
+        setPassword("");
+        console.error("Email has already existed!");
+      }
+    } catch (error) {
+      console.error("Error during get class general data:", error);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === "fourth" && !isChanged) {
@@ -381,7 +406,7 @@ export default function Teacher_ClassDetail({ id }) {
       <div>
         <Student_NavBar />
         <div className="d-flex flex-column mx-5">
-          <h1>{class_detail.className}</h1>
+          <h1>{classDetail.class_name}</h1>
           <Tab.Container
             id="left"
             defaultActiveKey="first"
@@ -424,7 +449,7 @@ export default function Teacher_ClassDetail({ id }) {
                         </Form.Label>
                         <Form.Control
                           type="text"
-                          value={class_detail.className}
+                          value={classDetail.class_name}
                           disabled
                         />
                       </Form.Group>
@@ -434,7 +459,7 @@ export default function Teacher_ClassDetail({ id }) {
                         </Form.Label>
                         <Form.Control
                           type="text"
-                          value={class_detail.createdBy}
+                          value={classDetail.createdBy}
                           disabled
                         />
                       </Form.Group>
@@ -463,7 +488,7 @@ export default function Teacher_ClassDetail({ id }) {
                         <Form.Control
                           as="textarea"
                           rows={description_row}
-                          value={class_detail.description}
+                          value={classDetail.description}
                           disabled
                         ></Form.Control>
                       </Form.Group>

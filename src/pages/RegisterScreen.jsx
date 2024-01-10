@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import Brand from "../components/Brand";
 import { getProfile } from "../service/userService";
 import { useAuth } from "../hooks/useAuth";
+import axios from "axios";
+import { signIn } from "../context/auth/reducers";
 
 function RegisterScreen() {
   const navigate = useNavigate();
@@ -26,7 +28,8 @@ function RegisterScreen() {
 
   const RegisterHandle = async (event) => {
     const URL =
-      "https://advancedweb-finalproject-be.onrender.com/auth/local/signup";
+      "https://advancedweb-finalproject-educat-be.onrender.com/auth/signup";
+
     event.preventDefault();
     const userAccount = {
       email: email,
@@ -36,17 +39,15 @@ function RegisterScreen() {
 
     console.log(userAccount);
     try {
-      const response = await fetch(URL, {
-        method: "POST",
+      const response = await axios.post(URL, userAccount, {
         headers: {
           Accept: "application/json; charset=utf-8",
           "Content-Type": "application/json; charset=utf-8",
         },
-        body: JSON.stringify(userAccount),
       });
 
-      const data = await response.json();
-
+      const data = response.data;
+      console.log(data);
       if (data) {
         localStorage.setItem("ACCESS_TOKEN", data.access_token);
 

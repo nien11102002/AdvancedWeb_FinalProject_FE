@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import ClassCard from "../../components/ClassCard";
 import "../../styles/StudentHomePage.css";
+import { useNavigate } from "react-router-dom";
 
 const classDetail = [
   {
@@ -64,8 +65,8 @@ export default function Teacher_HomePage() {
   const [newClassName, setNewClassName] = useState("");
   const [newClassCode, setNewClassCode] = useState("");
   const [newClassDescription, setNewClassDescription] = useState("");
-  const [newClassSchedule, setNewClassSchedule] = useState("");
-  const [newClassTime, setNewClassTime] = useState("");
+
+  const navigate = useNavigate();
   //Create Class Modal
   const handleCreateClassModal = () => {
     setShowCreateModal(true);
@@ -75,7 +76,62 @@ export default function Teacher_HomePage() {
     setShowCreateModal(false);
   };
 
-  const handleCreateClass = () => {};
+  function generateUniqueNumber() {
+    const timestamp = new Date().getTime().toString();
+    const randomDigits = Math.floor(Math.random() * 100000000000000)
+      .toString()
+      .padStart(15, "0");
+    return timestamp + randomDigits;
+  }
+
+  function getCurrentTimestamp() {
+    const now = new Date();
+
+    const year = now.getUTCFullYear();
+    const month = (now.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = now.getUTCDate().toString().padStart(2, "0");
+    const hours = now.getUTCHours().toString().padStart(2, "0");
+    const minutes = now.getUTCMinutes().toString().padStart(2, "0");
+    const seconds = now.getUTCSeconds().toString().padStart(2, "0");
+    const milliseconds = now.getUTCMilliseconds().toString().padStart(3, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+  }
+
+  const handleCreateClass = async () => {
+    const id = generateUniqueNumber();
+    const inviteLink = `https://advanced-web-final-project-fe.vercel.app/invite/${id}`;
+    const className = newClassName;
+    const classCode = newClassCode;
+    const classDescription = newClassDescription;
+    const createdAt = getCurrentTimestamp();
+
+    const classData = {
+      class_id: id,
+      created_at: createdAt,
+      updated_at: createdAt,
+      invite_code: classCode,
+      invite_link: inviteLink,
+    };
+    const URL =
+      "https://advancedweb-finalproject-educat-be.onrender.com/classes";
+    try {
+      const response = await axios.post(URL, classData, {
+        headers: {
+          Accept: "application/json; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      });
+
+      const data = await response.data;
+      if (data) {
+        const path = `/teacher/class-detail/${data.class_id}`;
+        navigate(path);
+      }
+    } catch (error) {
+      console.error("Error during create class:", error);
+    }
+  };
 
   //Join Class Modal
   const handleJoinClassModal = () => {
@@ -203,7 +259,7 @@ export default function Teacher_HomePage() {
                 onChange={(event) => setNewClassDescription(event.target.value)}
               />
             </Form.Group>
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Label className="class-label">Class Schedule</Form.Label>
               <Form.Control
                 type="text"
@@ -220,7 +276,7 @@ export default function Teacher_HomePage() {
                 value={newClassTime}
                 onChange={(event) => setNewClassTime(event.target.value)}
               />
-            </Form.Group>
+            </Form.Group> */}
           </Form>
         </Modal.Body>
         <Modal.Footer>

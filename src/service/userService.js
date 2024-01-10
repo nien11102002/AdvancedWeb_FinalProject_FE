@@ -26,3 +26,25 @@ export const getProfile = async () => {
     return null;
   }
 };
+
+export const getStudentID = async () => {
+  const user = await getProfile();
+  const url = `https://advancedweb-finalproject-educat-be.onrender.com/students/${user.id}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data) {
+      return data.student_id;
+    }
+    return " ";
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    return null;
+  }
+};

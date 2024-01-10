@@ -2,8 +2,19 @@ import React from "react";
 import { Container, Nav, Navbar, Dropdown, Image } from "react-bootstrap";
 import Brand from "./Brand";
 import avatar from "../assets/Logo.svg";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { signOut } from "../context/auth/reducers";
 
 export default function Admin_NavBar({ hasNewNotification }) {
+  const navigate = useNavigate();
+  const { dispatch } = useAuth();
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    dispatch(signOut());
+    navigate("/");
+  };
   return (
     <Navbar>
       <Container className="myContainer">
@@ -20,7 +31,7 @@ export default function Admin_NavBar({ hasNewNotification }) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>Users </Dropdown.Item>
-              <Dropdown.Item>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Nav>
