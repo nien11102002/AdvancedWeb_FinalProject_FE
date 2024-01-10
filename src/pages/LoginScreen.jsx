@@ -21,7 +21,6 @@ import { signIn } from "../context/auth/reducers";
 import { gapi } from "gapi-script";
 
 function LoginScreen() {
-  const CLIENT_ID = process.env.CLIENT_ID;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
