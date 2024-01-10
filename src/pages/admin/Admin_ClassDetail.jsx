@@ -7,43 +7,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function Admin_ClassDetail() {
-  const user_list = [
-    {
-      id: "01",
-      avatar: "N",
-      fullName: "Nguyen Duy Nien",
-      role: "student",
-      status: "active",
-      email: "ndnien@gmail.com",
-    },
-    {
-      id: "02",
-      avatar: "N",
-      fullName: "Nguyen Duy Nien",
-      role: "student",
-      status: "active",
-      email: "ndnien@gmail.com",
-    },
-    {
-      id: "03",
-      avatar: "N",
-      fullName: "Nguyen Duy Nien",
-      role: "student",
-      status: "active",
-      email: "ndnien@gmail.com",
-    },
-    {
-      id: "04",
-      avatar: "N",
-      fullName: "Nguyen Duy Nien",
-      role: "student",
-      status: "active",
-      email: "ndnien@gmail.com",
-    },
-  ];
-
   const description_row = 8;
 
+  const [userList, setUserList] = useState([]);
   const [course, setCourse] = useState({});
   const [isEditMode, setEditMode] = useState(false);
   const [className, setClassName] = useState();
@@ -52,6 +18,61 @@ export default function Admin_ClassDetail() {
   const [inviteCode, setInviteCode] = useState();
 
   const { class_id } = useParams();
+
+  const fetchPartipants = async () => {
+    var ID;
+    const URL_classMembers =
+      "https://advancedweb-finalproject-educat-be.onrender.com/class-members";
+    const URL_students =
+      "https://advancedweb-finalproject-educat-be.onrender.com/students";
+
+    try {
+      const response_classMembers = await fetch(URL_classMembers);
+      const response_students = await fetch(URL_students);
+      const classMembers = await response_classMembers.json();
+      const students = await response_students.json();
+
+      if (classMembers && students) {
+        classMembers.filter((member) => member.class_id == class_id);
+      }
+      const filteredClassMembers = classMembers.filter(
+        (member) => member.class_id === class_id
+      );
+
+      const studentIDs = filteredClassMembers.map(
+        (member) => member.student_id
+      );
+
+      const matchingStudents = students.filter((student) =>
+        studentIDs.includes(student.student_id)
+      );
+
+      const userIDs = matchingStudents.map((student) => student.user_id);
+
+      const userPromises = userIDs.map(async (userID) => {
+        const URL_userByIDBase = `https://advancedweb-finalproject-educat-be.onrender.com/users/`;
+        const response = await fetch(`${URL_userByIDBase}${userID}`);
+        const userData = await response.json();
+
+        const userEntry = {
+          user_id: userData.id,
+          studentID: matchingStudents.find(
+            (student) => student.user_id === userID
+          )?.student_id,
+          fullName: userData.fullname,
+          email: userData.email,
+          Type: userData.Type,
+          status: userData.status,
+        };
+        return userEntry;
+      });
+
+      const usersData = await Promise.all(userPromises);
+      setUserList(usersData);
+    } catch (errors) {
+      console.log("Errors in Participants fetch: ", errors);
+    }
+  };
 
   const fetchData = async () => {
     const URL = `
@@ -91,6 +112,7 @@ export default function Admin_ClassDetail() {
 
   useEffect(() => {
     fetchData();
+    fetchPartipants();
   }, []);
 
   const handleEditClick = () => {
@@ -214,7 +236,7 @@ export default function Admin_ClassDetail() {
                   </Form>
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
-                  <ScrollableTable items={user_list}></ScrollableTable>
+                  <ScrollableTable items={userList}></ScrollableTable>
                 </Tab.Pane>
               </Tab.Content>
             </Col>

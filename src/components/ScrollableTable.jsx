@@ -19,7 +19,6 @@ export default function AdminUserTable({ items, disabled }) {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Avatar</th>
             <th>Full Name</th>
             <th>Email</th>
             <th>Role</th>
@@ -30,10 +29,9 @@ export default function AdminUserTable({ items, disabled }) {
         <tbody>
           {items?.map((row, index) => (
             <tr key={index} onClick={() => ItemClickHandle(index)}>
-              <td>{row.avatar}</td>
               <td>{row.fullName}</td>
               <td>{row.email}</td>
-              <td>{row.role}</td>
+              <td>{row.Type}</td>
               <td>{row.status}</td>
               <td>{row.studentID}</td>
             </tr>
