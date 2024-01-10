@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -25,6 +25,18 @@ function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { dispatch } = useAuth();
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientID:
+          "576434745134-fdqkbfv966uls3idvloppqei9mn2p3s2.apps.googleusercontent.com",
+        scope: "",
+      });
+    }
+
+    gapi.load("client:auth2", start);
+  }, []);
 
   const LoginHandle = async (event) => {
     event.preventDefault();
@@ -78,16 +90,7 @@ function LoginScreen() {
 
   const handleGoogleLogin = (response) => {
     const accessToken = response?.credential?.accessToken;
-    function start() {
-      gapi.client.init({
-        clientID:
-          "576434745134-fdqkbfv966uls3idvloppqei9mn2p3s2.apps.googleusercontent.com",
-        scope: "",
-      });
-    }
-
-    gapi.load("client:auth2", start);
-    console.log("accessToken: ", accessToken);
+    console.log("Google Access Token:", accessToken);
     console.log("Google login success:", response);
   };
 
