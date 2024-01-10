@@ -80,7 +80,8 @@ function LoginScreen() {
     const accessToken = response?.credential?.accessToken;
     function start() {
       gapi.client.init({
-        clientID: CLIENT_ID,
+        clientID:
+          "576434745134-fdqkbfv966uls3idvloppqei9mn2p3s2.apps.googleusercontent.com",
         scope: "",
       });
     }
