@@ -150,7 +150,7 @@ function LoginScreen() {
           <Button variant="link">
             <Image className="logo" src={facebook_logo} alt="Facebook Login" />
           </Button>
-          <GoogleOAuthProvider clientId={CLIENT_ID}>
+          <GoogleOAuthProvider clientId="576434745134-fdqkbfv966uls3idvloppqei9mn2p3s2.apps.googleusercontent.com">
             <GoogleLogin
               onSuccess={handleGoogleLogin}
               onError={handleGoogleLoginError}
