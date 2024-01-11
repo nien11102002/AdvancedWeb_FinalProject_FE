@@ -66,12 +66,13 @@ function RegisterScreen() {
 
         navigate(path);
       } else {
-        setEmail("");
-        setPassword("");
-        console.error("Email has already existed!");
+        localStorage.clear();
+        sessionStorage.clear();
       }
     } catch (error) {
       console.error("Error during registration:", error);
+      localStorage.clear();
+      sessionStorage.clear();
     }
   };
 

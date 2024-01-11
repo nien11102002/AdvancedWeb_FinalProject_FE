@@ -79,12 +79,13 @@ function LoginScreen() {
           } else navigate("/admin/user-management");
         }
       } else {
-        setEmail("");
-        setPassword("");
-        console.error("Wrong Password or Email!");
+        localStorage.clear();
+        sessionStorage.clear();
       }
     } catch (error) {
       console.error("Error during login:", error);
+      localStorage.clear();
+      sessionStorage.clear();
     }
   };
 
