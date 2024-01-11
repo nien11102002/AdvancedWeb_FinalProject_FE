@@ -11,6 +11,8 @@ import {
 } from "react-bootstrap";
 import ClassCard from "../../components/ClassCard";
 import "../../styles/StudentHomePage.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const classDetail = [
   {
@@ -56,6 +58,8 @@ const classDetail = [
 ];
 
 export default function Student_HomePage() {
+  const navigate = useNavigate();
+
   const [showModal, setShowModal] = useState(false);
   const [classCode, setClassCode] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,7 +75,23 @@ export default function Student_HomePage() {
     setShowModal(false);
   };
 
-  const handleJoinClass = () => {};
+  const handleJoinClass = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/classes/code/${classCode}`;
+    try {
+      const response = await axios.get(URL);
+      const data = await response.data;
+      if (data) {
+        const user = await getProfile();
+        var pathBase;
+        if (user.Type == "student") pathBase = "/student";
+        else pathBase = "/teacher";
+        const path = `${pathBase}/class-detail/${data.class_id}`;
+        navigate(path);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

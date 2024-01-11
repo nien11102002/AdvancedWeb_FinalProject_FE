@@ -9,6 +9,7 @@ import DragAndDropRow from "../../components/DragAndDropRow";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CSVLink } from "react-csv";
 import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 const ExportCsvFile = ({ list }) => {
   const students = list.filter((user) => user.role === "student");
@@ -182,6 +183,7 @@ export default function Teacher_ClassDetail({ id }) {
 
   useEffect(() => {
     fetchClassGeneralData();
+    console.log(classDetail);
   }, [classDetail]);
 
   useEffect(() => {
@@ -455,8 +457,8 @@ export default function Teacher_ClassDetail({ id }) {
                           Invite code
                         </Form.Label>
                         <Form.Control
-                          type="number"
-                          value={class_detail.participants}
+                          type="text"
+                          value={classDetail.invite_code}
                           disabled
                         />
                       </Form.Group>
@@ -464,13 +466,13 @@ export default function Teacher_ClassDetail({ id }) {
                         <Form.Label className="class-label">
                           Invite Link
                         </Form.Label>
-                        <Link>abc</Link>
+                        <Link>{classDetail.invite_link}</Link>
                       </Form.Group>
                       <Form.Group>
                         <Form.Label className="class-label">Status</Form.Label>
                         <Form.Control
                           type="text"
-                          value={class_detail.status}
+                          value={classDetail.status}
                           disabled
                         ></Form.Control>
                       </Form.Group>

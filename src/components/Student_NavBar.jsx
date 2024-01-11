@@ -64,6 +64,9 @@ export default function Student_NavBar({ hasNewNotification }) {
     sessionStorage.clear();
     dispatch(signOut());
     navigate("/");
+
+    const URL =
+      "https://advancedweb-finalproject-educat-be.onrender.com/auth/logout";
   };
 
   return (
