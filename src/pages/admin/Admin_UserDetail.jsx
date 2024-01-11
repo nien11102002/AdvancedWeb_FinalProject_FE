@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Admin_NavBar from "../../components/Admin_NavBar";
 import "../../styles/Admin_UsersManagement.css";
 import {
@@ -11,44 +11,99 @@ import {
   Col,
 } from "react-bootstrap";
 import avatar from "../../assets/Logo.svg";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function Admin_UserDetail({}) {
-  const user = {
-    fullName: "Nguyễn Duy Niên",
-    dob: "2002-10-11",
-    gender: "male",
-    email: "ndnien@gmail.com",
-    username: "nien11102002",
-    studentID: "20127060",
-  };
+  const { id } = useParams();
 
-  const [fullName, setFullName] = useState(user.fullName);
-  const [dob, setDOB] = useState(user.dob);
-  const [email, setEmail] = useState(user.email);
-  const [gender, setGender] = useState(user.gender);
+  const [fullName, setFullName] = useState();
+  const [dob, setDOB] = useState();
+  const [email, setEmail] = useState();
+  const [studentID, setStudentID] = useState();
   const [isEditMode, setEditMode] = useState(false);
   const [isChangePassword, setChangePassword] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [studentID, setStudentID] = useState("");
+  const [isEditMapping, setEditMapping] = useState(false);
+  const [generalInfo, setGeneralInfo] = useState({});
+  const [role, setRole] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(fullName);
-    console.log(email);
-    console.log(dob);
-    console.log(gender);
-    console.log(isEditMode);
+  useEffect(() => {
+    fetchGeneralInfo();
+    fetchStudentID();
+  }, [generalInfo]);
+
+  const fetchGeneralInfo = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/users/${id}`;
+    try {
+      const response = await axios.get(URL);
+      const data = await response.data;
+      if (data) {
+        setGeneralInfo(data);
+        setFullName(data.fullname);
+        setDOB(data.dob);
+        setEmail(data.email);
+        setRole(data.Type);
+      }
+    } catch (e) {
+      console.error("Fail to fetch general info: ", e);
+    }
   };
 
-  const handleSubmit_passwordForm = (event) => {
+  const fetchStudentID = async () => {
+    const url = `https://advancedweb-finalproject-educat-be.onrender.com/students/${id}`;
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data) {
+        setStudentID(data.student_id);
+      }
+    } catch (error) {
+      console.error("Error getting user profile:", error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(fullName);
-    console.log(email);
-    console.log(dob);
-    console.log(gender);
-    console.log(isEditMode);
+
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/users/${id}`;
+    try {
+      const response = await axios.patch(URL, {
+        fullname: fullName,
+        dob: dob,
+        email: email,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
+  const handleSubmit_passwordForm = async (event) => {
+    event.preventDefault();
+    if (!isChangePassword) {
+      const URL_password = `https://advancedweb-finalproject-educat-be.onrender.com/users/${id}/password`;
+      if (newPassword != null && newPassword == confirmPassword) {
+        try {
+          const response = await axios.patch(URL_password, {
+            password: newPassword,
+          });
+
+          console.log(response.data);
+        } catch (error) {
+          console.error("Error updating password:", error);
+        }
+      }
+    }
   };
 
   const handleEditClick = () => {
@@ -59,33 +114,54 @@ export default function Admin_UserDetail({}) {
     setChangePassword(!isChangePassword);
   };
 
-  const handleMappingStudentID = () => {};
+  const handleEditMapping = () => {
+    setEditMapping(!isEditMapping);
+  };
+
+  const handleSubmit_StudentIDMapForm = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/students`;
+    const id = JSON.parse(sessionStorage.getItem("user")).id;
+    try {
+      const response = await axios.postForm(URL_password, {
+        user_id: id,
+        student_id: studentID,
+        created_at: "2024-01-10T20:51:41.846Z",
+        updated_at: "2024-01-10T20:51:41.846Z",
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating password:", error);
+    }
+  };
+
+  const handleBan = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/users/${id}`;
+    try {
+      const response = await axios.patch(URL, {
+        isBanned: true,
+      });
+      const data = await response.data;
+    } catch (e) {
+      console.error("Fail to ban user: ");
+    }
+  };
 
   return (
     <div>
       <Admin_NavBar></Admin_NavBar>
 
       <Row className="content">
-        <Col xs={4}>
-          <div className="left-container">
-            <div className="d-flex flex-column avatar-container">
-              <Container
-                style={{ width: "250px", height: "250px" }}
-                className="img bg-white"
-              >
-                <Image className="avatar" src={avatar}></Image>
-              </Container>
-
-              <Button className="btn-editAvatar">Change Avatar</Button>
-            </div>
-          </div>
-        </Col>
-        <Col xs={8}>
+        <Col xs={12}>
           <div className="table-container">
-            <Form onSubmit={handleSubmit} className="detail-form bg-white">
+            <Form
+              onSubmit={handleSubmit}
+              className="detail-form bg-white"
+              id="info-form"
+            >
               <div className="d-flex justify-content-between">
                 <h1>General Information</h1>
-                <Button>Ban</Button>
+                <Button onClick={handleBan}>Ban</Button>
               </div>
               <Form.Group>
                 <Form.Label className="user-label">Full Name</Form.Label>
@@ -121,34 +197,24 @@ export default function Admin_UserDetail({}) {
               </Form.Group>
 
               <Form.Group>
-                <Form.Label style={{ width: "200px" }}>Gender</Form.Label>
-                <Form.Check
-                  type="radio"
-                  value="male"
-                  onChange={(event) => {
-                    if (isEditMode) setGender(event.target.value);
-                  }}
+                <Form.Label className="user-label">Role</Form.Label>
+                <Form.Control
+                  className="user-input"
+                  type="text"
+                  value={role}
+                  onChange={(event) => setRole(event.target.value)}
                   readOnly={!isEditMode}
-                  checked={gender === "male"}
-                  label="male"
-                  name="gender"
-                />
-                <Form.Check
-                  type="radio"
-                  value="female"
-                  onChange={(event) => {
-                    if (isEditMode) setGender(event.target.value);
-                  }}
-                  readOnly={!isEditMode}
-                  checked={gender === "female"}
-                  label="female"
-                  name="gender"
-                />
+                ></Form.Control>
               </Form.Group>
+
               {isEditMode ? (
                 <Button onClick={handleEditClick}>Save</Button>
               ) : (
-                <Button type="submit" onClick={handleEditClick}>
+                <Button
+                  type="submit"
+                  form="info-form"
+                  onClick={handleEditClick}
+                >
                   Edit
                 </Button>
               )}
@@ -158,34 +224,12 @@ export default function Admin_UserDetail({}) {
             <Form
               onSubmit={handleSubmit_passwordForm}
               className="account-form bg-white"
+              id="password-form"
             >
-              <h1 style={{ marginLeft: "30px" }}>Account</h1>
-              <Container className="d-flex flex-column ">
-                <Form.Group>
-                  <Form.Label className="user-label">Username</Form.Label>
-                  <Form.Control
-                    className="user-input"
-                    type="text"
-                    value={user.username}
-                    readOnly={false}
-                  ></Form.Control>
-                </Form.Group>
-
+              <h1>Password</h1>
+              <div className="d-flex flex-column ">
                 {isChangePassword ? (
                   <>
-                    <Form.Group>
-                      <Form.Label className="user-label">
-                        Current Password
-                      </Form.Label>
-                      <Form.Control
-                        className="user-input"
-                        type="password"
-                        value={currentPassword}
-                        onChange={(event) =>
-                          setCurrentPassword(event.target.value)
-                        }
-                      ></Form.Control>
-                    </Form.Group>
                     <Form.Group>
                       <Form.Label className="user-label">
                         New Password
@@ -223,10 +267,12 @@ export default function Admin_UserDetail({}) {
                     ></Form.Control>
                   </Form.Group>
                 )}
-              </Container>
+              </div>
               {isChangePassword ? (
                 <Button
                   className="btn-account"
+                  type="submit"
+                  form="password-form"
                   onClick={handleChangePasswordClick}
                 >
                   Save
@@ -235,6 +281,7 @@ export default function Admin_UserDetail({}) {
                 <Button
                   className="btn-account"
                   type="submit"
+                  form="password-form"
                   onClick={handleChangePasswordClick}
                 >
                   Change Password
@@ -243,25 +290,36 @@ export default function Admin_UserDetail({}) {
             </Form>
 
             {/* Mapping StudentID and Account */}
-            <Form className="account-form bg-white">
-              <h1 style={{ marginLeft: "30px" }}>Mapping StudentID</h1>
+            <Form
+              className="account-form bg-white"
+              id="studentMapping"
+              onSubmit={handleSubmit_StudentIDMapForm}
+            >
+              <h1>Mapping StudentID</h1>
               <Form.Group className="d-flex">
-                <Form.Label
-                  style={{ marginLeft: "30px" }}
-                  className="user-label"
-                >
-                  Student ID
-                </Form.Label>
+                <Form.Label className="user-label">Student ID</Form.Label>
                 <Form.Control
                   className="user-input"
                   type="text"
                   value={studentID}
                   onChange={(event) => setStudentID(event.target.value)}
+                  readOnly={!isEditMapping}
                 />
               </Form.Group>
-              <Button className="btn-account" onClick={handleMappingStudentID}>
-                Mapping
-              </Button>
+              {isEditMapping ? (
+                <Button className="btn-account" onClick={handleEditMapping}>
+                  Map
+                </Button>
+              ) : (
+                <Button
+                  className="btn-account"
+                  type="submit"
+                  form="studentMapping"
+                  onClick={handleEditMapping}
+                >
+                  Edit
+                </Button>
+              )}
             </Form>
           </div>
         </Col>

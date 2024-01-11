@@ -26,16 +26,16 @@ function LandingPage() {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Brand></Brand>
             <Nav className="me-auto d-flex align-items-center">
-              <Nav.Link className="nav-link tw-mr-8" href="/home">
+              <Nav.Link className="nav-link tw-mr-8" href="/">
                 Home
               </Nav.Link>
-              <Nav.Link className="nav-link tw-mr-8" href="/about-us">
+              <Nav.Link className="nav-link tw-mr-8" href="/">
                 About us
               </Nav.Link>
-              <Nav.Link className="nav-link tw-mr-8" href="/classes">
+              <Nav.Link className="nav-link tw-mr-8" href="/">
                 Classes
               </Nav.Link>
-              <Nav.Link className="nav-link tw-mr-8" href="/help">
+              <Nav.Link className="nav-link tw-mr-8" href="/">
                 Help
               </Nav.Link>
             </Nav>

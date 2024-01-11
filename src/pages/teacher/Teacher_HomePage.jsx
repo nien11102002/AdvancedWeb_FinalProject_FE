@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Student_NavBar from "../../components/Student_NavBar";
 import {
   Button,
@@ -12,6 +12,8 @@ import {
 import ClassCard from "../../components/ClassCard";
 import "../../styles/StudentHomePage.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getProfile } from "../../service/userService";
 
 const classDetail = [
   {
@@ -65,8 +67,32 @@ export default function Teacher_HomePage() {
   const [newClassName, setNewClassName] = useState("");
   const [newClassCode, setNewClassCode] = useState("");
   const [newClassDescription, setNewClassDescription] = useState("");
+  const [classList, setClassList] = useState();
 
   const navigate = useNavigate();
+
+  const fetchData = async () => {
+    const user = await getProfile();
+
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/classes/user/${user.id}`;
+
+    try {
+      const response = await axios.get(URL);
+      const data = await response.data;
+
+      if (data) {
+        setClassList(data);
+        setFilteredClasses(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [classList]);
+
   //Create Class Modal
   const handleCreateClassModal = () => {
     setShowCreateModal(true);
@@ -75,14 +101,6 @@ export default function Teacher_HomePage() {
   const handleCloseCreateClassModal = () => {
     setShowCreateModal(false);
   };
-
-  function generateUniqueNumber() {
-    const timestamp = new Date().getTime().toString();
-    const randomDigits = Math.floor(Math.random() * 100000000000000)
-      .toString()
-      .padStart(15, "0");
-    return timestamp + randomDigits;
-  }
 
   function getCurrentTimestamp() {
     const now = new Date();
@@ -99,19 +117,20 @@ export default function Teacher_HomePage() {
   }
 
   const handleCreateClass = async () => {
-    const id = generateUniqueNumber();
-    const inviteLink = `https://advanced-web-final-project-fe.vercel.app/invite/${id}`;
     const className = newClassName;
     const classCode = newClassCode;
+    const inviteLink = `https://advanced-web-final-project-fe.vercel.app/invite/${classCode}`;
     const classDescription = newClassDescription;
     const createdAt = getCurrentTimestamp();
 
     const classData = {
-      class_id: id,
       created_at: createdAt,
       updated_at: createdAt,
       invite_code: classCode,
       invite_link: inviteLink,
+      status: "active",
+      class_name: className,
+      description: classDescription,
     };
     const URL =
       "https://advancedweb-finalproject-educat-be.onrender.com/classes";
@@ -124,6 +143,7 @@ export default function Teacher_HomePage() {
       });
 
       const data = await response.data;
+      console.log(data);
       if (data) {
         const path = `/teacher/class-detail/${data.class_id}`;
         navigate(path);

@@ -8,7 +8,7 @@ import { DndProvider } from "react-dnd";
 import DragAndDropRow from "../../components/DragAndDropRow";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CSVLink } from "react-csv";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ExportCsvFile = ({ list }) => {
   const students = list.filter((user) => user.role === "student");
@@ -129,7 +129,6 @@ export default function Teacher_ClassDetail({ id }) {
     { name: "C", percentage: 10 },
   ];
 
-  const classOwner = classDetail.createdBy;
   const user = "Nguyen Duy Nien";
 
   const [classDetail, setClassDetail] = useState({});
@@ -172,20 +171,18 @@ export default function Teacher_ClassDetail({ id }) {
       const response = await axios.get(URL);
 
       const data = response.data;
-
+      console.log(data);
       if (data) {
-        let path;
-
-        navigate(path);
-      } else {
-        setEmail("");
-        setPassword("");
-        console.error("Email has already existed!");
+        setClassDetail(data);
       }
     } catch (error) {
       console.error("Error during get class general data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchClassGeneralData();
+  }, [classDetail]);
 
   useEffect(() => {
     if (activeTab === "fourth" && !isChanged) {
@@ -455,23 +452,19 @@ export default function Teacher_ClassDetail({ id }) {
                       </Form.Group>
                       <Form.Group>
                         <Form.Label className="class-label">
-                          Main teacher
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          value={classDetail.createdBy}
-                          disabled
-                        />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Label className="class-label">
-                          Participants
+                          Invite code
                         </Form.Label>
                         <Form.Control
                           type="number"
                           value={class_detail.participants}
                           disabled
                         />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label className="class-label">
+                          Invite Link
+                        </Form.Label>
+                        <Link>abc</Link>
                       </Form.Group>
                       <Form.Group>
                         <Form.Label className="class-label">Status</Form.Label>
@@ -558,54 +551,50 @@ export default function Teacher_ClassDetail({ id }) {
                   </Tab.Pane>
 
                   <Tab.Pane eventKey="fourth">
-                    {classOwner === user ? (
-                      <>
-                        <div>
-                          <input
-                            type="file"
-                            accept=".csv"
-                            style={{ display: "none" }}
-                            onChange={(e) => handleUploadStudentList(e)}
-                            ref={studentListFileInputRef}
-                          />
-                          <Button
-                            variant="primary"
-                            onClick={() =>
-                              studentListFileInputRef.current.click()
-                            }
-                          >
-                            Upload Student List
-                          </Button>
-                        </div>
-                        <ExportCsvFile list={user_list} />
-                        <ExportCsvGradeBoard
-                          gradeBoard={gradeBoard}
-                          totalGradeLogic={totalGradeLogic}
-                          emails={studentMapping}
+                    <>
+                      <div>
+                        <input
+                          type="file"
+                          accept=".csv"
+                          style={{ display: "none" }}
+                          onChange={(e) => handleUploadStudentList(e)}
+                          ref={studentListFileInputRef}
                         />
-                        <DownloadTemplate
-                          grades={grades}
-                          students={uploadedStudentList}
+                        <Button
+                          variant="primary"
+                          onClick={() =>
+                            studentListFileInputRef.current.click()
+                          }
+                        >
+                          Upload Student List
+                        </Button>
+                      </div>
+                      <ExportCsvFile list={user_list} />
+                      <ExportCsvGradeBoard
+                        gradeBoard={gradeBoard}
+                        totalGradeLogic={totalGradeLogic}
+                        emails={studentMapping}
+                      />
+                      <DownloadTemplate
+                        grades={grades}
+                        students={uploadedStudentList}
+                      />
+                      <div>
+                        <input
+                          type="file"
+                          accept=".csv"
+                          style={{ display: "none" }}
+                          onChange={(e) => handleUploadGrades(e)}
+                          ref={gradesFileInputRef}
                         />
-                        <div>
-                          <input
-                            type="file"
-                            accept=".csv"
-                            style={{ display: "none" }}
-                            onChange={(e) => handleUploadGrades(e)}
-                            ref={gradesFileInputRef}
-                          />
-                          <Button
-                            variant="primary"
-                            onClick={() => gradesFileInputRef.current.click()}
-                          >
-                            Upload Grades
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <></>
-                    )}
+                        <Button
+                          variant="primary"
+                          onClick={() => gradesFileInputRef.current.click()}
+                        >
+                          Upload Grades
+                        </Button>
+                      </div>
+                    </>
                     <Table striped bordered hover>
                       <thead>
                         <tr>

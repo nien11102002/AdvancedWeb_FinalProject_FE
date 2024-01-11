@@ -46,7 +46,7 @@ function RegisterScreen() {
         },
       });
 
-      const data = response.data;
+      const data = await response.data;
       console.log(data);
       if (data) {
         localStorage.setItem("ACCESS_TOKEN", data.access_token);

@@ -1,21 +1,47 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Admin_NavBar from "../../components/Admin_NavBar";
 import "../../styles/Admin_UsersManagement.css";
 import { Form, FormControl, Button, Container } from "react-bootstrap";
 import ScrollableTable from "../../components/ScrollableTable";
+import axios from "axios";
 
 export default function Admin_UserManagement() {
-  const user_list = [
-    {
-      id: "01",
-      avatar: "N",
-      fullName: "Nguyen Duy Nien",
-      role: "student",
-      status: "active",
-      email: "ndnien@gmail.com",
-      studentID: "id",
-    },
-  ];
+  const [userList, setUserList] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, [userList]);
+
+  const fetchData = async () => {
+    const URL = "https://advancedweb-finalproject-educat-be.onrender.com/users";
+    const URL_students =
+      "https://advancedweb-finalproject-educat-be.onrender.com/students";
+    try {
+      const response_students = await axios.get(URL_students);
+      const students = await response_students.data;
+
+      const response = await axios.get(URL);
+      const data = response.data;
+      if (data) {
+        const newUserList = data.map((value) => {
+          const userEntry = {
+            user_id: value.id,
+            studentID: students.find((student) => student.user_id === value.id)
+              ?.student_id,
+            fullName: value.fullname,
+            email: value.email,
+            Type: value.Type,
+            status: value.status,
+          };
+
+          return userEntry;
+        });
+        setUserList(newUserList);
+      }
+    } catch (e) {
+      console.log("Failed to load userList: ", e);
+    }
+  };
 
   const fileInputRef = useRef(null);
 
@@ -58,7 +84,7 @@ export default function Admin_UserManagement() {
             onChange={handleUploadExcelFile}
           />
         </Container>
-        <ScrollableTable items={user_list}></ScrollableTable>
+        <ScrollableTable items={userList}></ScrollableTable>
       </div>
     </div>
   );

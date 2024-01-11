@@ -74,7 +74,7 @@ export default function Student_NavBar({ hasNewNotification }) {
         <Nav className="me-auto">
           <Nav.Link href="/student">Home</Nav.Link>
           <Nav.Link href="/notification">Notification</Nav.Link>
-          <Nav.Link href="/profile">Profile</Nav.Link>
+          <Nav.Link href="/user-profile">Profile</Nav.Link>
         </Nav>
         <Nav>
           <Dropdown align="end">

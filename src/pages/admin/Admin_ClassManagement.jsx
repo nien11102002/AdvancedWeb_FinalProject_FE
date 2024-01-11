@@ -19,9 +19,6 @@ export default function Admin_ClassManagement({ disabled }) {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState(null);
   const [filterID, setFilterID] = useState("");
-  const [filterCreatedBy, setFilterCreatedBy] = useState("");
-  const [filterMinParticipants, setFilterMinParticipants] = useState("");
-  const [filterMaxParticipants, setFilterMaxParticipants] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);

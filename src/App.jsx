@@ -16,6 +16,7 @@ import Teacher_ClassDetail from "./pages/teacher/Teacher_ClassDetail";
 import GuestGuard from "./guards/GuestGuard";
 import { AuthGuard } from "./guards/AuthGuard";
 import RoleBasedGuard from "./guards/RoleBasedGuard";
+import ClassInvite from "./pages/ClassInvite";
 
 function App() {
   return (
@@ -49,9 +50,9 @@ function App() {
       <Route
         path="/user-profile"
         element={
-          // <AuthGuard>
-          <Student_UserProfile />
-          // </AuthGuard>
+          <AuthGuard>
+            <Student_UserProfile />
+          </AuthGuard>
         }
       />
 
@@ -67,9 +68,9 @@ function App() {
       <Route
         path="student/class-detail/:id"
         element={
-          // <RoleBasedGuard accessibleRoles={["student"]}>
-          <Student_ClassDetail />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["student"]}>
+            <Student_ClassDetail />
+          </RoleBasedGuard>
         }
       />
       {/* <Route
@@ -93,17 +94,26 @@ function App() {
       <Route
         path="/teacher"
         element={
-          // <RoleBasedGuard accessibleRoles={["teacher"]}>
-          <Teacher_HomePage />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["teacher"]}>
+            <Teacher_HomePage />
+          </RoleBasedGuard>
         }
       />
       <Route
         path="/teacher/class-detail/:class_id"
         element={
-          // <RoleBasedGuard accessibleRoles={["teacher"]}>
-          <Teacher_ClassDetail />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["teacher"]}>
+            <Teacher_ClassDetail />
+          </RoleBasedGuard>
+        }
+      />
+
+      <Route
+        path="/invite/:class_code"
+        element={
+          <AuthGuard>
+            <ClassInvite />
+          </AuthGuard>
         }
       />
 
@@ -111,33 +121,33 @@ function App() {
       <Route
         path="admin/user-management"
         element={
-          // <RoleBasedGuard accessibleRoles={["admin"]}>
-          <Admin_UserManagement />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["admin"]}>
+            <Admin_UserManagement />
+          </RoleBasedGuard>
         }
       />
       <Route
         path="admin/user-detail/:id"
         element={
-          // <RoleBasedGuard accessibleRoles={["admin"]}>
-          <Admin_UserDetail />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["admin"]}>
+            <Admin_UserDetail />
+          </RoleBasedGuard>
         }
       />
       <Route
         path="admin/class-management/"
         element={
-          // <RoleBasedGuard accessibleRoles={["admin"]}>
-          <Admin_ClassManagement />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["admin"]}>
+            <Admin_ClassManagement />
+          </RoleBasedGuard>
         }
       />
       <Route
         path="admin/class-detail/:class_id"
         element={
-          // <RoleBasedGuard accessibleRoles={["admin"]}>
-          <Admin_ClassDetail />
-          // </RoleBasedGuard>
+          <RoleBasedGuard accessibleRoles={["admin"]}>
+            <Admin_ClassDetail />
+          </RoleBasedGuard>
         }
       />
     </Routes>

@@ -3,6 +3,7 @@ import Student_NavBar from "../../components/Student_NavBar";
 import { Button, Container, Form, Row } from "react-bootstrap";
 import "../../styles/Admin_UsersManagement.css";
 import { getProfile, getStudentID } from "../../service/userService";
+import axios from "axios";
 
 export default function Student_UserProfile() {
   const [fullName, setFullName] = useState();
@@ -11,23 +12,21 @@ export default function Student_UserProfile() {
   const [studentID, setStudentID] = useState();
   const [isEditMode, setEditMode] = useState(false);
   const [isChangePassword, setChangePassword] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isEditMapping, setEditMapping] = useState(false);
+  const [generalInfo, setGeneralInfo] = useState({});
+  const [role, setRole] = useState("");
 
-  const role = "student";
-  // sessionStorage.getItem("user").Type;
-
-  // useEffect(() => {
-  //   fetchGeneralData();
-  //   if (role == "student") fetchStudentID();
-  // }, []);
+  useEffect(() => {
+    fetchGeneralData();
+  }, [generalInfo]);
 
   const fetchGeneralData = async () => {
     const user = await getProfile();
 
-    setFullName(user.fullName);
+    setGeneralInfo(user);
+    setFullName(user.fullname);
     setDOB(user.dob);
     setEmail(user.email);
     setRole(user.Type);
@@ -38,22 +37,42 @@ export default function Student_UserProfile() {
     setStudentID(studentID);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(fullName);
-    console.log(email);
-    console.log(dob);
-    console.log(gender);
-    console.log(isEditMode);
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    console.log(user);
+    user.fullname = fullName;
+    user.dob = dob;
+
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/users/${user.id}`;
+    try {
+      const response = await axios.patch(URL, {
+        fullname: user.fullname,
+        dob: user.dob,
+        email: email,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   };
 
-  const handleSubmit_passwordForm = (event) => {
+  const handleSubmit_passwordForm = async (event) => {
     event.preventDefault();
-    console.log(fullName);
-    console.log(email);
-    console.log(dob);
-    console.log(gender);
-    console.log(isEditMode);
+    const id = JSON.parse(sessionStorage.getItem("user")).id;
+    const URL_password = `https://advancedweb-finalproject-educat-be.onrender.com/users/${id}/password`;
+    if (newPassword != null && newPassword == confirmPassword) {
+      try {
+        const response = await axios.patch(URL_password, {
+          password: newPassword,
+        });
+
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error updating password:", error);
+      }
+    }
   };
 
   const handleEditClick = () => {
@@ -68,8 +87,21 @@ export default function Student_UserProfile() {
     setEditMapping(!isEditMapping);
   };
 
-  const handleSubmit_StudentIDMapForm = () => {
-    const URL = ``;
+  const handleSubmit_StudentIDMapForm = async () => {
+    const URL = `https://advancedweb-finalproject-educat-be.onrender.com/students`;
+    const id = JSON.parse(sessionStorage.getItem("user")).id;
+    try {
+      const response = await axios.post(URL_password, {
+        user_id: id,
+        student_id: studentID,
+        created_at: "2024-01-10T20:51:41.846Z",
+        updated_at: "2024-01-10T20:51:41.846Z",
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error updating password:", error);
+    }
   };
 
   return (
@@ -114,13 +146,13 @@ export default function Student_UserProfile() {
               </Form.Group>
 
               <Form.Group>
-                <Form.Label className="user-label">Email</Form.Label>
+                <Form.Label className="user-label">Role</Form.Label>
                 <Form.Control
                   className="user-input"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  readOnly={!isEditMode}
+                  type="text"
+                  value={role}
+                  onChange={(event) => setRole(event.target.value)}
+                  readOnly={false}
                 ></Form.Control>
               </Form.Group>
             </Container>
@@ -145,31 +177,8 @@ export default function Student_UserProfile() {
           >
             <h1 style={{ marginLeft: "30px" }}>Account</h1>
             <Container className="d-flex flex-column ">
-              <Form.Group>
-                <Form.Label className="user-label">Email</Form.Label>
-                <Form.Control
-                  className="user-input"
-                  type="text"
-                  value={email}
-                  readOnly={false}
-                ></Form.Control>
-              </Form.Group>
-
               {isChangePassword ? (
                 <>
-                  <Form.Group>
-                    <Form.Label className="user-label">
-                      Current Password
-                    </Form.Label>
-                    <Form.Control
-                      className="user-input"
-                      type="password"
-                      value={currentPassword}
-                      onChange={(event) =>
-                        setCurrentPassword(event.target.value)
-                      }
-                    ></Form.Control>
-                  </Form.Group>
                   <Form.Group>
                     <Form.Label className="user-label">New Password</Form.Label>
                     <Form.Control
@@ -233,6 +242,7 @@ export default function Student_UserProfile() {
                     className="user-input"
                     type="text"
                     value={studentID}
+                    onChange={(event) => setStudentID(event.target.value)}
                     readOnly={!isEditMapping}
                   ></Form.Control>
                 </Form.Group>
